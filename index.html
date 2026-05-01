@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Swadeshi Swap — Indian Alternatives Finder</title>
+  <link rel="stylesheet" href="assets/styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark">🇮🇳</span>
+      <div>
+        <h1>Swadeshi Swap</h1>
+        <p class="tag">Find Indian alternatives to foreign products. Know where they come from before you buy.</p>
+      </div>
+    </div>
+  </header>
+
+  <section class="controls">
+    <input id="search" type="search" placeholder="Search a product or brand (e.g. Maggi, Nike, iPhone)..." aria-label="Search" />
+    <select id="category" aria-label="Filter by category">
+      <option value="">All categories</option>
+    </select>
+    <select id="country" aria-label="Filter by origin country">
+      <option value="">All origin countries</option>
+    </select>
+    <select id="recommendation" aria-label="Filter by recommendation">
+      <option value="">All recommendations</option>
+      <option value="prefer">Prefer</option>
+      <option value="neutral">Neutral</option>
+      <option value="caution">Caution</option>
+      <option value="avoid">Avoid</option>
+    </select>
+  </section>
+
+  <main>
+    <div id="results-meta" class="results-meta"></div>
+    <div id="grid" class="grid"></div>
+    <div id="empty" class="empty hidden">No products match your filters.</div>
+  </main>
+
+  <div id="modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal-card">
+      <button id="modal-close" class="modal-close" aria-label="Close">&times;</button>
+      <div id="modal-body"></div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <p>
+      Data is indicative and drawn from publicly available sources (MEA, MoCI, MoIA, World Bank, company filings).
+      Verify prices and origins at point of sale. Built to encourage informed, confident swadeshi choices.
+    </p>
+  </footer>
+
+  <script src="data/countries.js"></script>
+  <script src="data/products.js"></script>
+  <script src="assets/app.js"></script>
+</body>
+</html>

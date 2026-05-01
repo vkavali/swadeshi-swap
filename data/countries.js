@@ -1,0 +1,240 @@
+// Country profiles relative to India.
+// Figures are indicative/approximate and drawn from publicly available data
+// (MEA, Ministry of Commerce, World Bank, MoIA reports). Use as a guide, not gospel.
+// recommendation: prefer | neutral | caution | avoid
+window.COUNTRIES = {
+  CN: {
+    code: "CN",
+    name: "China",
+    flag: "🇨🇳",
+    relationship: "Strained. Unresolved boundary dispute (LAC); 2020 Galwan clash; ongoing trust deficit despite recent disengagement steps.",
+    treatmentOfIndians: "Limited Indian presence; visas tightly controlled. Sporadic harassment of Indian students/journalists reported; no formal protections.",
+    diaspora: "~5,000 (mainly traders, students, professionals)",
+    tradeBalance: "Massive deficit for India (~US$85 billion in 2023-24). India's largest goods import partner.",
+    fdiPosture: "FDI from China requires prior government approval (Press Note 3, 2020).",
+    recommendation: "avoid",
+    note: "Buying Indian alternatives directly reduces the trade deficit and dependency."
+  },
+  US: {
+    code: "US",
+    name: "United States",
+    flag: "🇺🇸",
+    relationship: "Comprehensive Global Strategic Partnership. iCET, Quad, defence and tech cooperation.",
+    treatmentOfIndians: "Largest professional Indian community abroad; broadly positive integration. Periodic hate-crime incidents but strong legal recourse.",
+    diaspora: "~4.8 million (Indian-American)",
+    tradeBalance: "Surplus for India (~US$35 billion in 2023-24). US is India's largest export market.",
+    fdiPosture: "Top FDI source for India.",
+    recommendation: "neutral",
+    note: "Strategic partner; Indian alternatives still preferred where competitive."
+  },
+  KR: {
+    code: "KR",
+    name: "South Korea",
+    flag: "🇰🇷",
+    relationship: "Special Strategic Partnership. CEPA in force since 2010 (under review/upgrade).",
+    treatmentOfIndians: "Small but well-treated community; visa friendly for skilled workers and students.",
+    diaspora: "~15,000",
+    tradeBalance: "Deficit for India (~US$14 billion in 2023-24).",
+    fdiPosture: "Major investor — Samsung, LG, Hyundai, Kia have large Indian operations.",
+    recommendation: "neutral",
+    note: "Many 'Korean' brand goods are now manufactured in India."
+  },
+  JP: {
+    code: "JP",
+    name: "Japan",
+    flag: "🇯🇵",
+    relationship: "Special Strategic and Global Partnership. Quad partner; Mumbai-Ahmedabad bullet train; major ODA donor.",
+    treatmentOfIndians: "Small community, generally well treated; growing openness to Indian IT talent.",
+    diaspora: "~40,000",
+    tradeBalance: "Deficit for India (~US$6 billion in 2023-24).",
+    fdiPosture: "Top-5 FDI source; long-term, patient capital.",
+    recommendation: "prefer",
+    note: "Friendly partner; still favour Indian alternatives where quality matches."
+  },
+  DE: {
+    code: "DE",
+    name: "Germany",
+    flag: "🇩🇪",
+    relationship: "Strategic Partnership since 2000. Biennial Inter-Governmental Consultations.",
+    treatmentOfIndians: "Growing diaspora, broadly positive. Skilled-worker visas being expanded for Indians.",
+    diaspora: "~210,000",
+    tradeBalance: "Slight deficit for India (~US$5 billion in 2023-24).",
+    fdiPosture: "Significant investor in autos, chemicals, engineering.",
+    recommendation: "prefer",
+    note: "Friendly, balanced relationship."
+  },
+  GB: {
+    code: "GB",
+    name: "United Kingdom",
+    flag: "🇬🇧",
+    relationship: "2030 Roadmap; FTA negotiations advanced. Living Bridge of people-to-people ties.",
+    treatmentOfIndians: "Very large, influential diaspora; PM-level political representation. Periodic racism incidents but strong legal protections.",
+    diaspora: "~1.9 million",
+    tradeBalance: "Roughly balanced (small surplus for India).",
+    fdiPosture: "Top-6 FDI source.",
+    recommendation: "prefer",
+    note: "Strong people-to-people links; many UK brands manufactured in India."
+  },
+  CH: {
+    code: "CH",
+    name: "Switzerland",
+    flag: "🇨🇭",
+    relationship: "Cordial. EFTA-India TEPA signed March 2024 — US$100bn investment commitment over 15 years.",
+    treatmentOfIndians: "Small community, well treated.",
+    diaspora: "~25,000",
+    tradeBalance: "Large deficit for India (gold imports skew the figure).",
+    fdiPosture: "Significant — Nestlé, Novartis, ABB.",
+    recommendation: "neutral",
+    note: "TEPA expected to deepen ties; Indian FMCG alternatives are strong."
+  },
+  FR: {
+    code: "FR",
+    name: "France",
+    flag: "🇫🇷",
+    relationship: "Strategic Partnership since 1998. Defence (Rafale, Scorpène), space, civil nuclear.",
+    treatmentOfIndians: "Smaller diaspora, generally well integrated.",
+    diaspora: "~110,000",
+    tradeBalance: "Slight deficit for India.",
+    fdiPosture: "Top-15 FDI source.",
+    recommendation: "prefer",
+    note: "Trusted strategic partner."
+  },
+  NL: {
+    code: "NL",
+    name: "Netherlands",
+    flag: "🇳🇱",
+    relationship: "Strategic partnership since 2023. 4th largest FDI source for India cumulatively.",
+    treatmentOfIndians: "Small community, well treated.",
+    diaspora: "~25,000",
+    tradeBalance: "Surplus for India.",
+    fdiPosture: "Major FDI source (often via tax-treaty routing).",
+    recommendation: "prefer",
+    note: "Investment-friendly, low political friction."
+  },
+  SE: {
+    code: "SE",
+    name: "Sweden",
+    flag: "🇸🇪",
+    relationship: "Friendly; Joint Action Plan, India-Nordic Summit format.",
+    treatmentOfIndians: "Small community, well treated.",
+    diaspora: "~30,000",
+    tradeBalance: "Small deficit for India.",
+    fdiPosture: "Notable — IKEA, Ericsson, H&M, Volvo.",
+    recommendation: "neutral",
+    note: "Friendly, but Indian alternatives in furniture and apparel are strong."
+  },
+  ES: {
+    code: "ES",
+    name: "Spain",
+    flag: "🇪🇸",
+    relationship: "Cordial; growing trade and investment links.",
+    treatmentOfIndians: "Small but settled diaspora, broadly positive.",
+    diaspora: "~50,000",
+    tradeBalance: "Roughly balanced.",
+    fdiPosture: "Modest investor.",
+    recommendation: "neutral"
+  },
+  IT: {
+    code: "IT",
+    name: "Italy",
+    flag: "🇮🇹",
+    relationship: "Strategic Partnership signed 2023.",
+    treatmentOfIndians: "Large agricultural-worker community in north Italy; some labour exploitation cases reported.",
+    diaspora: "~200,000",
+    tradeBalance: "Slight surplus for India.",
+    fdiPosture: "Modest.",
+    recommendation: "neutral"
+  },
+  AU: {
+    code: "AU",
+    name: "Australia",
+    flag: "🇦🇺",
+    relationship: "Comprehensive Strategic Partnership; Quad partner; ECTA in force since Dec 2022.",
+    treatmentOfIndians: "Large student and skilled-migrant community; periodic but isolated racism incidents; strong legal recourse.",
+    diaspora: "~1 million (Indian-origin)",
+    tradeBalance: "Deficit for India (coal, education).",
+    fdiPosture: "Growing investor; pension funds entering Indian infra.",
+    recommendation: "prefer",
+    note: "Close partner; trusted source."
+  },
+  CA: {
+    code: "CA",
+    name: "Canada",
+    flag: "🇨🇦",
+    relationship: "Currently strained (2023-24 diplomatic row over Khalistani extremism allegations). Trade talks paused.",
+    treatmentOfIndians: "Very large diaspora; large student inflow. Recent uptick in attacks on Hindu temples; concerns over Khalistani activity.",
+    diaspora: "~1.8 million (Indian-origin)",
+    tradeBalance: "Roughly balanced.",
+    fdiPosture: "Pension funds are large investors in Indian infra.",
+    recommendation: "caution",
+    note: "Watch evolving political situation."
+  },
+  AE: {
+    code: "AE",
+    name: "United Arab Emirates",
+    flag: "🇦🇪",
+    relationship: "Comprehensive Strategic Partnership; CEPA in force since May 2022. Aim: US$100bn non-oil trade by 2030.",
+    treatmentOfIndians: "Largest expat community; tolerant policy environment but workers face kafala-system constraints.",
+    diaspora: "~3.5 million (largest single overseas community)",
+    tradeBalance: "Deficit for India (oil).",
+    fdiPosture: "Major and growing — sovereign funds, ports, renewables.",
+    recommendation: "prefer",
+    note: "Closest economic partner in the Gulf."
+  },
+  SG: {
+    code: "SG",
+    name: "Singapore",
+    flag: "🇸🇬",
+    relationship: "Strategic Partnership; CECA since 2005. Regional financial hub for Indian firms.",
+    treatmentOfIndians: "Large, influential community; among best treatment globally.",
+    diaspora: "~650,000 (Indian-origin)",
+    tradeBalance: "Roughly balanced.",
+    fdiPosture: "#1 FDI source into India for several years.",
+    recommendation: "prefer"
+  },
+  TW: {
+    code: "TW",
+    name: "Taiwan",
+    flag: "🇹🇼",
+    relationship: "Unofficial but warm; growing tech and semiconductor cooperation.",
+    treatmentOfIndians: "Small but rapidly growing migrant-worker pact (2024); skilled professionals welcomed.",
+    diaspora: "~5,000",
+    tradeBalance: "Deficit for India (electronics).",
+    fdiPosture: "Foxconn, Pegatron expanding India ops.",
+    recommendation: "neutral"
+  },
+  VN: {
+    code: "VN",
+    name: "Vietnam",
+    flag: "🇻🇳",
+    relationship: "Comprehensive Strategic Partnership; close defence ties.",
+    treatmentOfIndians: "Small community, well treated.",
+    diaspora: "~5,000",
+    tradeBalance: "Slight deficit for India.",
+    fdiPosture: "Modest two-way investment.",
+    recommendation: "prefer"
+  },
+  TH: {
+    code: "TH",
+    name: "Thailand",
+    flag: "🇹🇭",
+    relationship: "Friendly; Act East cornerstone.",
+    treatmentOfIndians: "Settled diaspora, well treated.",
+    diaspora: "~250,000 (Indian-origin)",
+    tradeBalance: "Deficit for India.",
+    fdiPosture: "Modest.",
+    recommendation: "neutral"
+  },
+  IN: {
+    code: "IN",
+    name: "India",
+    flag: "🇮🇳",
+    relationship: "Home.",
+    treatmentOfIndians: "—",
+    diaspora: "—",
+    tradeBalance: "—",
+    fdiPosture: "—",
+    recommendation: "prefer",
+    note: "Indian-made. Buy with confidence."
+  }
+};
