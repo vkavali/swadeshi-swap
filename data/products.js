@@ -329,5 +329,286 @@ window.PRODUCTS = [
       { name: "JioMart", brand: "Reliance Retail", priceInr: "Variable", madeIn: "India" },
       { name: "Snapdeal", brand: "Snapdeal", priceInr: "Variable", madeIn: "India" }
     ]
+  },
+
+  // ----- More Electronics -----
+  {
+    id: "p-laptop-hp",
+    category: "Electronics",
+    foreign: { name: "HP / Dell / Lenovo laptop", brand: "HP / Dell / Lenovo", country: "US", priceInr: "₹40,000 – ₹1,50,000" },
+    indian: [
+      { name: "Primebook 4G", brand: "Primebook", priceInr: "₹15,000 – ₹25,000", madeIn: "India" },
+      { name: "Wings Nuvobook", brand: "Wings", priceInr: "₹25,000 – ₹40,000", madeIn: "India" }
+    ],
+    notes: "Indian laptop OEMs are early but growing under PLI. Most global brands now also assemble in India."
+  },
+  {
+    id: "p-tv-lg",
+    category: "Electronics",
+    foreign: { name: "LG / Samsung TV", brand: "LG / Samsung", country: "KR", priceInr: "₹25,000 – ₹2,00,000" },
+    indian: [
+      { name: "Onida Smart TV", brand: "Onida (MIRC Electronics)", priceInr: "₹15,000 – ₹50,000", madeIn: "India" },
+      { name: "BPL TV", brand: "BPL", priceInr: "₹12,000 – ₹40,000", madeIn: "India" }
+    ]
+  },
+  {
+    id: "p-camera",
+    category: "Electronics",
+    foreign: { name: "Canon / Nikon DSLR", brand: "Canon / Nikon", country: "JP", priceInr: "₹40,000 – ₹2,50,000" },
+    indian: [
+      { name: "Smartphone w/ Indian brand (Lava Agni 3)", brand: "Lava", priceInr: "₹20,000 – ₹25,000", madeIn: "India" }
+    ],
+    notes: "No mainstream Indian camera OEM. For most users, a flagship Indian-brand smartphone now matches DSLR for casual use."
+  },
+  {
+    id: "p-dyson",
+    category: "Appliances",
+    foreign: { name: "Dyson vacuum / fan", brand: "Dyson", country: "GB", priceInr: "₹25,000 – ₹70,000" },
+    indian: [
+      { name: "Eureka Forbes vacuum", brand: "Eureka Forbes", priceInr: "₹6,000 – ₹25,000", madeIn: "India" },
+      { name: "Atomberg fan", brand: "Atomberg", priceInr: "₹3,500 – ₹8,000", madeIn: "India" }
+    ]
+  },
+  {
+    id: "p-roomba",
+    category: "Appliances",
+    foreign: { name: "iRobot Roomba", brand: "iRobot", country: "US", priceInr: "₹25,000 – ₹80,000" },
+    indian: [
+      { name: "Milagrow robot vacuum", brand: "Milagrow", priceInr: "₹12,000 – ₹40,000", madeIn: "India" }
+    ]
+  },
+
+  // ----- Cars -----
+  {
+    id: "p-toyota",
+    category: "Automotive",
+    foreign: { name: "Toyota / Honda sedan", brand: "Toyota / Honda", country: "JP", priceInr: "₹10L – ₹40L" },
+    indian: [
+      { name: "Tata Nexon / Harrier", brand: "Tata Motors", priceInr: "₹8L – ₹25L", madeIn: "India" },
+      { name: "Mahindra XUV / Scorpio-N", brand: "Mahindra", priceInr: "₹13L – ₹26L", madeIn: "India" }
+    ]
+  },
+  {
+    id: "p-hyundai",
+    category: "Automotive",
+    foreign: { name: "Hyundai / Kia SUV", brand: "Hyundai / Kia", country: "KR", priceInr: "₹8L – ₹30L" },
+    indian: [
+      { name: "Tata Punch / Nexon", brand: "Tata Motors", priceInr: "₹6L – ₹15L", madeIn: "India" },
+      { name: "Mahindra XUV300 / 700", brand: "Mahindra", priceInr: "₹8L – ₹26L", madeIn: "India" }
+    ]
+  },
+  {
+    id: "p-tesla",
+    category: "Automotive",
+    foreign: { name: "Tesla / BYD EV", brand: "Tesla / BYD", country: "US", priceInr: "₹40L+" },
+    indian: [
+      { name: "Tata Nexon EV / Punch EV", brand: "Tata.ev", priceInr: "₹10L – ₹20L", madeIn: "India" },
+      { name: "Mahindra XEV 9e / BE 6", brand: "Mahindra", priceInr: "₹19L – ₹30L", madeIn: "India" }
+    ]
+  },
+
+  // ----- Watches & accessories -----
+  {
+    id: "p-rolex",
+    category: "Accessories",
+    foreign: { name: "Rolex / Omega luxury watch", brand: "Rolex / Omega", country: "CH", priceInr: "₹3L – ₹50L" },
+    indian: [
+      { name: "Titan Edge / Nebula", brand: "Titan", priceInr: "₹5,000 – ₹2,00,000", madeIn: "India" },
+      { name: "Jaipur Watch Company", brand: "JWC", priceInr: "₹15,000 – ₹1,50,000", madeIn: "India" }
+    ]
+  },
+  {
+    id: "p-parker",
+    category: "Stationery",
+    foreign: { name: "Parker / Mont Blanc pens", brand: "Parker / Mont Blanc", country: "GB", priceInr: "₹1,000 – ₹50,000" },
+    indian: [
+      { name: "Cello pens", brand: "Cello (BIC India)", priceInr: "₹10 – ₹500", madeIn: "India" },
+      { name: "Reynolds", brand: "Reynolds (GM Pens)", priceInr: "₹10 – ₹200", madeIn: "India" },
+      { name: "Camlin Klick", brand: "Camlin (Kokuyo)", priceInr: "₹10 – ₹300", madeIn: "India" },
+      { name: "Linc", brand: "Linc Pens", priceInr: "₹10 – ₹400", madeIn: "India" }
+    ]
+  },
+
+  // ----- Cosmetics & personal care extras -----
+  {
+    id: "p-loreal",
+    category: "Personal care",
+    foreign: { name: "L'Oréal / Maybelline makeup", brand: "L'Oréal / Maybelline", country: "FR", priceInr: "₹300 – ₹3,000" },
+    indian: [
+      { name: "Lakmé", brand: "Lakmé (HUL, Indian-origin)", priceInr: "₹200 – ₹2,000", madeIn: "India" },
+      { name: "SUGAR Cosmetics", brand: "SUGAR", priceInr: "₹400 – ₹2,500", madeIn: "India" },
+      { name: "MyGlamm", brand: "MyGlamm", priceInr: "₹300 – ₹2,000", madeIn: "India" }
+    ]
+  },
+  {
+    id: "p-nivea",
+    category: "Personal care",
+    foreign: { name: "Nivea / Ponds lotion", brand: "Beiersdorf / Unilever", country: "DE", priceInr: "₹150 – ₹500" },
+    indian: [
+      { name: "Boroplus", brand: "Emami", priceInr: "₹50 – ₹250", madeIn: "India" },
+      { name: "Himalaya moisturiser", brand: "Himalaya", priceInr: "₹100 – ₹400", madeIn: "India (Indian-origin)" },
+      { name: "Mamaearth", brand: "Honasa Consumer", priceInr: "₹250 – ₹600", madeIn: "India" }
+    ]
+  },
+  {
+    id: "p-axe",
+    category: "Personal care",
+    foreign: { name: "Axe / Old Spice deodorant", brand: "Unilever / P&G", country: "GB", priceInr: "₹200 – ₹400" },
+    indian: [
+      { name: "Wild Stone", brand: "McNROE", priceInr: "₹150 – ₹350", madeIn: "India" },
+      { name: "Set Wet", brand: "Marico", priceInr: "₹150 – ₹300", madeIn: "India" },
+      { name: "Beardo", brand: "Beardo (Marico)", priceInr: "₹250 – ₹600", madeIn: "India" }
+    ]
+  },
+
+  // ----- Food & beverage extras -----
+  {
+    id: "p-redbull",
+    category: "Beverages",
+    foreign: { name: "Red Bull / Monster energy", brand: "Red Bull / Monster", country: "US", priceInr: "₹110 / 250ml" },
+    indian: [
+      { name: "Sting", brand: "PepsiCo India (made in India)", priceInr: "₹20 / 250ml", madeIn: "India" },
+      { name: "Charged by Thums Up", brand: "Coca-Cola India", priceInr: "₹50 / 250ml", madeIn: "India" },
+      { name: "Hell Energy India", brand: "Hell Energy", priceInr: "₹100 / 250ml", madeIn: "India (Hungarian brand, Indian-bottled)" }
+    ]
+  },
+  {
+    id: "p-tropicana",
+    category: "Beverages",
+    foreign: { name: "Tropicana / Minute Maid juice", brand: "PepsiCo / Coca-Cola", country: "US", priceInr: "₹100 / 1L" },
+    indian: [
+      { name: "Real / Real Activ", brand: "Dabur", priceInr: "₹110 / 1L", madeIn: "India" },
+      { name: "B Natural", brand: "ITC", priceInr: "₹100 / 1L", madeIn: "India" },
+      { name: "Paper Boat", brand: "Hector Beverages", priceInr: "₹50 / 250ml", madeIn: "India" }
+    ]
+  },
+  {
+    id: "p-cereal",
+    category: "Food",
+    foreign: { name: "Kellogg's cereal", brand: "Kellogg's", country: "US", priceInr: "₹250 / 475g" },
+    indian: [
+      { name: "Bagrry's Muesli", brand: "Bagrry's", priceInr: "₹400 / 500g", madeIn: "India" },
+      { name: "Soulfull Ragi Bites", brand: "Tata Soulfull", priceInr: "₹140 / 200g", madeIn: "India" }
+    ]
+  },
+  {
+    id: "p-oats",
+    category: "Food",
+    foreign: { name: "Quaker Oats", brand: "PepsiCo", country: "US", priceInr: "₹220 / 1kg" },
+    indian: [
+      { name: "Tata Soulfull Millet Oats", brand: "Tata Soulfull", priceInr: "₹150 / 500g", madeIn: "India" },
+      { name: "Patanjali Oats", brand: "Patanjali", priceInr: "₹140 / 500g", madeIn: "India" }
+    ]
+  },
+  {
+    id: "p-ketchup",
+    category: "Food",
+    foreign: { name: "Heinz ketchup", brand: "Kraft Heinz", country: "US", priceInr: "₹150 / 500g" },
+    indian: [
+      { name: "Maggi Hot & Sweet (HUL)", brand: "Nestlé India (locally made)", priceInr: "₹110 / 500g", madeIn: "India" },
+      { name: "Kissan ketchup", brand: "HUL (locally made)", priceInr: "₹120 / 500g", madeIn: "India" },
+      { name: "Veeba", brand: "Veeba", priceInr: "₹130 / 500g", madeIn: "India" }
+    ]
+  },
+  {
+    id: "p-nutella",
+    category: "Food",
+    foreign: { name: "Nutella spread", brand: "Ferrero", country: "IT", priceInr: "₹500 / 350g" },
+    indian: [
+      { name: "Hershey's Spread (made in India)", brand: "Hershey India", priceInr: "₹220 / 350g", madeIn: "India" },
+      { name: "Lotte ChocoPie? — alt: The Whole Truth", brand: "The Whole Truth", priceInr: "₹400 / 250g", madeIn: "India" }
+    ]
+  },
+
+  // ----- Toys -----
+  {
+    id: "p-lego",
+    category: "Toys",
+    foreign: { name: "LEGO bricks", brand: "LEGO", country: "DE", priceInr: "₹500 – ₹15,000" },
+    indian: [
+      { name: "Funskool building sets", brand: "Funskool (MRF group)", priceInr: "₹400 – ₹3,000", madeIn: "India (Goa)" },
+      { name: "Centy Toys", brand: "Centy", priceInr: "₹100 – ₹1,000", madeIn: "India" }
+    ]
+  },
+  {
+    id: "p-mattel",
+    category: "Toys",
+    foreign: { name: "Mattel / Hasbro toys (Barbie, Hot Wheels)", brand: "Mattel / Hasbro", country: "US", priceInr: "₹500 – ₹5,000" },
+    indian: [
+      { name: "Funskool", brand: "Funskool", priceInr: "₹200 – ₹2,500", madeIn: "India" }
+    ]
+  },
+
+  // ----- Pet care -----
+  {
+    id: "p-pedigree",
+    category: "Pet care",
+    foreign: { name: "Pedigree dog food", brand: "Mars", country: "US", priceInr: "₹350 / 1.2kg" },
+    indian: [
+      { name: "Drools", brand: "Drools (IB Group)", priceInr: "₹300 / 1.2kg", madeIn: "India" },
+      { name: "Heads Up For Tails", brand: "HUFT", priceInr: "₹450 / 1.5kg", madeIn: "India" }
+    ]
+  },
+
+  // ----- Streaming & SaaS -----
+  {
+    id: "p-netflix",
+    category: "Services",
+    foreign: { name: "Netflix subscription", brand: "Netflix", country: "US", priceInr: "₹149 – ₹649 / mo" },
+    indian: [
+      { name: "JioHotstar", brand: "Reliance + Disney JV", priceInr: "₹149 – ₹499 / mo", madeIn: "India" },
+      { name: "ZEE5", brand: "Zee Entertainment", priceInr: "₹99 – ₹349 / mo", madeIn: "India" },
+      { name: "SonyLIV", brand: "Sony Pictures Networks India", priceInr: "₹299 – ₹999 / yr", madeIn: "India" }
+    ]
+  },
+  {
+    id: "p-spotify",
+    category: "Services",
+    foreign: { name: "Spotify Premium", brand: "Spotify", country: "SE", priceInr: "₹119 / mo" },
+    indian: [
+      { name: "JioSaavn Pro", brand: "JioSaavn", priceInr: "₹99 / mo", madeIn: "India" },
+      { name: "Gaana Plus", brand: "Gaana (Times Internet)", priceInr: "₹99 / mo", madeIn: "India" },
+      { name: "Wynk Music", brand: "Bharti Airtel", priceInr: "Free / ₹99 / mo", madeIn: "India" }
+    ]
+  },
+  {
+    id: "p-slack",
+    category: "Software",
+    foreign: { name: "Slack workplace chat", brand: "Salesforce", country: "US", priceInr: "₹730 / user / mo" },
+    indian: [
+      { name: "Zoho Cliq", brand: "Zoho", priceInr: "₹90 / user / mo", madeIn: "India" },
+      { name: "Flock", brand: "Flock (Directi)", priceInr: "₹390 / user / mo", madeIn: "India" }
+    ]
+  },
+  {
+    id: "p-dropbox",
+    category: "Software",
+    foreign: { name: "Dropbox cloud storage", brand: "Dropbox", country: "US", priceInr: "₹830 / mo (2TB)" },
+    indian: [
+      { name: "Zoho WorkDrive", brand: "Zoho", priceInr: "₹220 / user / mo", madeIn: "India" },
+      { name: "Digiboxx", brand: "Digiboxx", priceInr: "₹30 / mo (2TB)", madeIn: "India" }
+    ]
+  },
+  {
+    id: "p-paypal",
+    category: "Services",
+    foreign: { name: "PayPal payments", brand: "PayPal", country: "US", priceInr: "Variable" },
+    indian: [
+      { name: "Razorpay", brand: "Razorpay", priceInr: "2% per txn", madeIn: "India (Bengaluru)" },
+      { name: "Paytm", brand: "One97 Communications", priceInr: "Variable", madeIn: "India (Noida)" },
+      { name: "Cashfree", brand: "Cashfree", priceInr: "Variable", madeIn: "India" }
+    ]
+  },
+
+  // ----- Pharma / health -----
+  {
+    id: "p-supplements",
+    category: "Health",
+    foreign: { name: "Centrum / GNC multivitamins", brand: "Pfizer / GNC", country: "US", priceInr: "₹500 – ₹2,500" },
+    indian: [
+      { name: "Himalaya Wellness", brand: "Himalaya", priceInr: "₹150 – ₹800", madeIn: "India" },
+      { name: "Dabur Chyawanprash", brand: "Dabur", priceInr: "₹250 – ₹600", madeIn: "India" },
+      { name: "Patanjali Divya range", brand: "Patanjali", priceInr: "₹150 – ₹500", madeIn: "India" }
+    ]
   }
 ];

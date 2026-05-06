@@ -236,5 +236,170 @@ window.COUNTRIES = {
     fdiPosture: "—",
     recommendation: "prefer",
     note: "Indian-made. Buy with confidence."
+  },
+  IL: {
+    code: "IL",
+    name: "Israel",
+    flag: "🇮🇱",
+    relationship: "Strategic Partnership; deep defence and agri-tech cooperation.",
+    treatmentOfIndians: "Small but growing community of caregivers and IT professionals; well treated.",
+    diaspora: "~85,000",
+    tradeBalance: "Slight surplus for India.",
+    fdiPosture: "Major defence and water-tech partner.",
+    recommendation: "prefer"
+  },
+  RU: {
+    code: "RU",
+    name: "Russia",
+    flag: "🇷🇺",
+    relationship: "Special and Privileged Strategic Partnership; major defence supplier; discounted oil.",
+    treatmentOfIndians: "Small student / professional community; broadly safe but bureaucratic.",
+    diaspora: "~25,000",
+    tradeBalance: "Large deficit for India (oil, defence).",
+    fdiPosture: "Limited two-way investment; sanctions-related friction.",
+    recommendation: "neutral"
+  },
+  SA: {
+    code: "SA",
+    name: "Saudi Arabia",
+    flag: "🇸🇦",
+    relationship: "Strategic Partnership Council; energy and Haj cooperation.",
+    treatmentOfIndians: "Large worker base; kafala constraints, but reform underway.",
+    diaspora: "~2.6 million",
+    tradeBalance: "Deficit for India (oil).",
+    fdiPosture: "Significant — Aramco, PIF investments planned.",
+    recommendation: "neutral"
+  },
+  QA: {
+    code: "QA",
+    name: "Qatar",
+    flag: "🇶🇦",
+    relationship: "Friendly; major LNG supplier.",
+    treatmentOfIndians: "Large worker base; reforms post-World Cup.",
+    diaspora: "~750,000",
+    tradeBalance: "Deficit for India (LNG).",
+    fdiPosture: "Modest sovereign-fund presence.",
+    recommendation: "neutral"
+  },
+  KW: {
+    code: "KW",
+    name: "Kuwait",
+    flag: "🇰🇼",
+    relationship: "Cordial; energy and labour ties.",
+    treatmentOfIndians: "~1m workers; largely well treated; periodic visa quotas.",
+    diaspora: "~1 million",
+    tradeBalance: "Deficit for India (oil).",
+    fdiPosture: "Modest.",
+    recommendation: "neutral"
+  },
+  MY: {
+    code: "MY",
+    name: "Malaysia",
+    flag: "🇲🇾",
+    relationship: "Strategic Partnership; Act East partner.",
+    treatmentOfIndians: "Large Indian-origin community (Tamil); some affirmative-action friction.",
+    diaspora: "~2.9 million (PIO + NRI)",
+    tradeBalance: "Deficit for India (palm oil).",
+    fdiPosture: "Modest two-way.",
+    recommendation: "neutral"
+  },
+  ID: {
+    code: "ID",
+    name: "Indonesia",
+    flag: "🇮🇩",
+    relationship: "Comprehensive Strategic Partnership; Act East partner.",
+    treatmentOfIndians: "Small but settled community.",
+    diaspora: "~120,000",
+    tradeBalance: "Deficit for India (palm oil, coal).",
+    fdiPosture: "Growing.",
+    recommendation: "neutral"
+  },
+  TR: {
+    code: "TR",
+    name: "Türkiye",
+    flag: "🇹🇷",
+    relationship: "Cool. Repeated pro-Pakistan posture on Kashmir at OIC/UN; defence cooperation with Pakistan.",
+    treatmentOfIndians: "Small tourist / student presence; no major issues but visas tightened.",
+    diaspora: "~3,000",
+    tradeBalance: "Surplus for India.",
+    fdiPosture: "Limited; some projects cancelled post-2023.",
+    recommendation: "caution"
+  },
+  PK: {
+    code: "PK",
+    name: "Pakistan",
+    flag: "🇵🇰",
+    relationship: "Hostile. Trade largely suspended since 2019; cross-border terrorism concerns.",
+    treatmentOfIndians: "Indians not normally permitted to travel; visa regime extremely restrictive.",
+    diaspora: "Negligible (formal).",
+    tradeBalance: "Effectively nil since 2019 suspension; minor third-country flows.",
+    fdiPosture: "Banned.",
+    recommendation: "avoid"
+  },
+  BD: {
+    code: "BD",
+    name: "Bangladesh",
+    flag: "🇧🇩",
+    relationship: "Close historical partnership; large LoC, energy and connectivity projects. Currently watching post-2024 political transition.",
+    treatmentOfIndians: "Small expat community; recent unrest has caused some concern.",
+    diaspora: "~10,000 (formal)",
+    tradeBalance: "Large surplus for India.",
+    fdiPosture: "Growing — Adani power, Reliance, Marico.",
+    recommendation: "neutral"
+  },
+  LK: {
+    code: "LK",
+    name: "Sri Lanka",
+    flag: "🇱🇰",
+    relationship: "Close neighbour; ~US$4bn in 2022-23 crisis support; growing connectivity.",
+    treatmentOfIndians: "Settled Tamil-origin community; tourism welcomed.",
+    diaspora: "~1.6 million (PIO)",
+    tradeBalance: "Surplus for India.",
+    fdiPosture: "Significant — Adani port/renewables, IOC.",
+    recommendation: "prefer"
+  },
+  NP: {
+    code: "NP",
+    name: "Nepal",
+    flag: "🇳🇵",
+    relationship: "Special open-border relationship; periodic political friction.",
+    treatmentOfIndians: "Free movement; large reciprocal worker flows.",
+    diaspora: "~600,000 (formal)",
+    tradeBalance: "Large surplus for India.",
+    fdiPosture: "India is top investor in Nepal.",
+    recommendation: "prefer"
+  },
+  BR: {
+    code: "BR",
+    name: "Brazil",
+    flag: "🇧🇷",
+    relationship: "BRICS, IBSA partner; growing strategic ties.",
+    treatmentOfIndians: "Small community, well treated.",
+    diaspora: "~5,000",
+    tradeBalance: "Deficit for India.",
+    fdiPosture: "Modest two-way.",
+    recommendation: "prefer"
+  },
+  ZA: {
+    code: "ZA",
+    name: "South Africa",
+    flag: "🇿🇦",
+    relationship: "BRICS, IBSA partner; strong civilisational links via PIO.",
+    treatmentOfIndians: "Large, settled Indian-origin population; periodic xenophobic incidents target broader migrant groups.",
+    diaspora: "~1.6 million (PIO)",
+    tradeBalance: "Deficit for India (gold, coal).",
+    fdiPosture: "Modest.",
+    recommendation: "prefer"
+  },
+  MX: {
+    code: "MX",
+    name: "Mexico",
+    flag: "🇲🇽",
+    relationship: "Privileged Partnership; growing pharma and IT.",
+    treatmentOfIndians: "Small community, well treated.",
+    diaspora: "~7,000",
+    tradeBalance: "Surplus for India.",
+    fdiPosture: "Modest.",
+    recommendation: "neutral"
   }
 };
