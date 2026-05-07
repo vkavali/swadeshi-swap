@@ -8,6 +8,7 @@
   const FAVS_KEY = "swadeshi.favs";
   const THEME_KEY = "swadeshi.theme";
   const CONTRIBS_KEY = "swadeshi.contribs.v1";
+  const API_KEY = "swadeshi.api";
 
   let favs = new Set(JSON.parse(localStorage.getItem(FAVS_KEY) || "[]"));
   function saveFavs() { localStorage.setItem(FAVS_KEY, JSON.stringify([...favs])); }
@@ -20,6 +21,38 @@
     return { products: [], alternatives: {}, notes: {} };
   })();
   function saveContribs() { localStorage.setItem(CONTRIBS_KEY, JSON.stringify(contribs)); }
+
+  // Backend config: localStorage > window.SWADESHI_CONFIG.apiBase
+  let apiBase = (localStorage.getItem(API_KEY) || (window.SWADESHI_CONFIG && window.SWADESHI_CONFIG.apiBase) || "").replace(/\/+$/, "");
+  let serverProducts = [];      // [{id, category, foreign, indian, notes}]
+  let serverAltsByPid = {};     // {pid: [{name,brand,priceInr,madeIn}]}
+  let serverNotesByPid = {};    // {pid: [{text, ts}]}
+
+  async function api(path, opts = {}) {
+    if (!apiBase) throw new Error("No backend configured");
+    const r = await fetch(apiBase + path, {
+      ...opts,
+      headers: { "Content-Type": "application/json", ...(opts.headers || {}) }
+    });
+    if (!r.ok) {
+      const t = await r.text().catch(() => "");
+      throw new Error("API " + r.status + (t ? ": " + t : ""));
+    }
+    return r.status === 204 ? null : r.json();
+  }
+
+  async function loadFromBackend() {
+    if (!apiBase) return;
+    try {
+      const data = await api("/api/products");
+      serverProducts = data.products || [];
+      serverAltsByPid = data.alternatives || {};
+      serverNotesByPid = data.notes || {};
+    } catch (e) {
+      console.warn("Backend unreachable; using local data.", e.message);
+      serverProducts = []; serverAltsByPid = {}; serverNotesByPid = {};
+    }
+  }
 
   // -------- Theme --------
   const savedTheme = localStorage.getItem(THEME_KEY);
@@ -64,12 +97,26 @@
   }
   const REC_ORDER = { avoid: 0, caution: 1, neutral: 2, prefer: 3 };
 
-  // Combined catalogue = curated + user-contributed
+  // Combined catalogue = curated + community (from backend) + user-local-only
   function allProducts() {
-    const userProducts = contribs.products.map(p => ({ ...p, _user: true }));
-    return [...CURATED, ...userProducts].map(p => {
-      const userAlts = (contribs.alternatives[p.id] || []).map(a => ({ ...a, _user: true }));
-      return { ...p, indian: [...p.indian, ...userAlts] };
+    const community = serverProducts.map(p => ({ ...p, _community: true }));
+    // User-local products that haven't been pushed to backend yet
+    const serverIds = new Set(serverProducts.map(p => p.id));
+    const userOnly = contribs.products.filter(p => !serverIds.has(p.id)).map(p => ({ ...p, _user: true }));
+    const merged = [...CURATED, ...community, ...userOnly];
+
+    return merged.map(p => {
+      const srvAlts = (serverAltsByPid[p.id] || []).map(a => ({ ...a, _community: true }));
+      const localAlts = (contribs.alternatives[p.id] || []).map(a => ({ ...a, _user: true }));
+      return {
+        ...p,
+        indian: [
+          ...p.indian.map(a => p._community ? { ...a, _community: true } : a),
+          // For curated products, server alts are extras (not in p.indian); for community ones the alts come via serverAltsByPid already, but p.indian already has them too. Dedupe by name+brand:
+          ...srvAlts.filter(a => !(p.indian || []).some(b => b.name === a.name && b.brand === a.brand)),
+          ...localAlts
+        ]
+      };
     });
   }
 
@@ -138,13 +185,20 @@
       </div>
     `).join("");
 
-    const userNotes = (contribs.notes[p.id] || []).map((n, i) => `
+    const localNotes = (contribs.notes[p.id] || []).map((n, i) => `
       <div class="note-block">
         <button class="delete" data-del-note="${p.id}::${i}" title="Delete note">×</button>
         <span class="who">Your note</span> · <span class="meta">${escapeHtml(new Date(n.ts).toLocaleDateString())}</span>
         <div>${escapeHtml(n.text)}</div>
       </div>
     `).join("");
+    const communityNotes = (serverNotesByPid[p.id] || []).map(n => `
+      <div class="note-block">
+        <span class="who">Community note</span> · <span class="meta">${escapeHtml(new Date(n.ts).toLocaleDateString())}</span>
+        <div>${escapeHtml(n.text)}</div>
+      </div>
+    `).join("");
+    const userNotes = communityNotes + localNotes;
 
     const card = document.createElement("article");
     card.className = "card";
@@ -399,7 +453,7 @@
 
   els.addProduct.addEventListener("click", openAddProduct);
 
-  els.addForm.addEventListener("submit", e => {
+  els.addForm.addEventListener("submit", async e => {
     e.preventDefault();
     const f = new FormData(els.addForm);
     const id = "user-" + Date.now().toString(36);
@@ -420,8 +474,22 @@
       }],
       notes: f.get("notes").trim()
     };
-    contribs.products.push(product);
-    saveContribs();
+
+    let pushed = false;
+    if (apiBase) {
+      try {
+        await api("/api/products", { method: "POST", body: JSON.stringify(product) });
+        await loadFromBackend();
+        pushed = true;
+      } catch (err) {
+        alert("Backend save failed (" + err.message + "). Saved locally instead.");
+      }
+    }
+    if (!pushed) {
+      contribs.products.push(product);
+      saveContribs();
+    }
+
     populateFilters();
     applyFilters();
     els.addModal.classList.add("hidden");
@@ -434,7 +502,7 @@
     }
   });
 
-  els.altForm.addEventListener("submit", e => {
+  els.altForm.addEventListener("submit", async e => {
     e.preventDefault();
     const f = new FormData(els.altForm);
     const id = f.get("targetId");
@@ -444,22 +512,48 @@
       priceInr: f.get("iPrice").trim(),
       madeIn: f.get("iMadeIn").trim() || "India"
     };
-    contribs.alternatives[id] = contribs.alternatives[id] || [];
-    contribs.alternatives[id].push(alt);
-    saveContribs();
+
+    let pushed = false;
+    if (apiBase) {
+      try {
+        await api(`/api/products/${encodeURIComponent(id)}/alternatives`, { method: "POST", body: JSON.stringify(alt) });
+        await loadFromBackend();
+        pushed = true;
+      } catch (err) {
+        alert("Backend save failed (" + err.message + "). Saved locally instead.");
+      }
+    }
+    if (!pushed) {
+      contribs.alternatives[id] = contribs.alternatives[id] || [];
+      contribs.alternatives[id].push(alt);
+      saveContribs();
+    }
     applyFilters();
     els.altModal.classList.add("hidden");
   });
 
-  els.noteForm.addEventListener("submit", e => {
+  els.noteForm.addEventListener("submit", async e => {
     e.preventDefault();
     const f = new FormData(els.noteForm);
     const id = f.get("targetId");
     const text = f.get("note").trim();
     if (!text) return;
-    contribs.notes[id] = contribs.notes[id] || [];
-    contribs.notes[id].push({ text, ts: Date.now() });
-    saveContribs();
+
+    let pushed = false;
+    if (apiBase) {
+      try {
+        await api(`/api/products/${encodeURIComponent(id)}/notes`, { method: "POST", body: JSON.stringify({ text }) });
+        await loadFromBackend();
+        pushed = true;
+      } catch (err) {
+        alert("Backend save failed (" + err.message + "). Saved locally instead.");
+      }
+    }
+    if (!pushed) {
+      contribs.notes[id] = contribs.notes[id] || [];
+      contribs.notes[id].push({ text, ts: Date.now() });
+      saveContribs();
+    }
     applyFilters();
     els.noteModal.classList.add("hidden");
   });
@@ -658,8 +752,82 @@
     }
   });
 
+  // -------- Settings (backend connection) --------
+  const settingsModal = document.getElementById("settings-modal");
+  const settingsForm = document.getElementById("settings-form");
+  const settingsInput = document.getElementById("settings-api-base");
+  const settingsStatus = document.getElementById("settings-status");
+  const settingsTest = document.getElementById("settings-test");
+  const settingsSync = document.getElementById("settings-sync");
+
+  document.getElementById("settings").addEventListener("click", () => {
+    settingsInput.value = apiBase || "";
+    settingsStatus.textContent = apiBase ? `Connected to ${apiBase}` : "Not connected (local-only).";
+    settingsModal.classList.remove("hidden");
+  });
+
+  settingsTest.addEventListener("click", async () => {
+    const url = (settingsInput.value || "").replace(/\/+$/, "");
+    if (!url) { settingsStatus.textContent = "Enter a URL first."; return; }
+    settingsStatus.textContent = "Testing…";
+    try {
+      const r = await fetch(url + "/api/health");
+      if (!r.ok) throw new Error("HTTP " + r.status);
+      const j = await r.json();
+      settingsStatus.textContent = j.ok ? `OK · ${j.ts}` : "Server replied but not ok.";
+    } catch (e) {
+      settingsStatus.textContent = "Failed: " + e.message;
+    }
+  });
+
+  settingsForm.addEventListener("submit", async e => {
+    e.preventDefault();
+    const url = (settingsInput.value || "").replace(/\/+$/, "");
+    apiBase = url;
+    if (url) localStorage.setItem(API_KEY, url); else localStorage.removeItem(API_KEY);
+    settingsStatus.textContent = "Saved. Loading community data…";
+    await loadFromBackend();
+    populateFilters();
+    applyFilters();
+    settingsStatus.textContent = url ? `Connected. ${serverProducts.length} community products loaded.` : "Local-only mode.";
+    setTimeout(() => settingsModal.classList.add("hidden"), 600);
+  });
+
+  settingsSync.addEventListener("click", async () => {
+    if (!apiBase) { settingsStatus.textContent = "Connect a backend first (Save URL)."; return; }
+    settingsStatus.textContent = "Syncing…";
+    let okP = 0, okA = 0, okN = 0, fail = 0;
+    for (const p of contribs.products) {
+      try { await api("/api/products", { method: "POST", body: JSON.stringify(p) }); okP++; }
+      catch (e) { if (!String(e.message).includes("409")) fail++; }
+    }
+    for (const [pid, alts] of Object.entries(contribs.alternatives)) {
+      for (const a of alts) {
+        try { await api(`/api/products/${encodeURIComponent(pid)}/alternatives`, { method: "POST", body: JSON.stringify(a) }); okA++; }
+        catch { fail++; }
+      }
+    }
+    for (const [pid, notesArr] of Object.entries(contribs.notes)) {
+      for (const n of notesArr) {
+        try { await api(`/api/products/${encodeURIComponent(pid)}/notes`, { method: "POST", body: JSON.stringify({ text: n.text }) }); okN++; }
+        catch { fail++; }
+      }
+    }
+    settingsStatus.textContent = `Synced: ${okP} products, ${okA} alts, ${okN} notes${fail ? `, ${fail} failed` : ""}.`;
+    await loadFromBackend();
+    populateFilters();
+    applyFilters();
+  });
+
   // -------- Boot --------
   populateFilters();
   readUrl();
   applyFilters({ skipUrl: true });
+  // Pull community data if a backend is configured
+  if (apiBase) {
+    loadFromBackend().then(() => {
+      populateFilters();
+      applyFilters({ skipUrl: true });
+    });
+  }
 })();

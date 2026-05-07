@@ -55,8 +55,36 @@ data/products.js
 
 Browser tooling: vanilla JS, no framework, no build, no dependencies.
 
+## Multi-user backend on Railway
+
+A small Node + Express + Postgres backend lives in `server/`. Once deployed and connected, contributions are saved to a shared database and visible to every visitor.
+
+### Deploy in ~5 minutes
+
+1. **Push the repo to GitHub** (already done).
+2. https://railway.app/new → **Deploy from GitHub repo** → pick `vkavali/Order-managment`.
+3. In the service's **Settings → Source → Root Directory**, set `server`.
+4. **Add a Postgres database** to the project (Railway's plugin). It auto-injects `DATABASE_URL` into the service.
+5. (Optional) under Variables, set `ALLOWED_ORIGINS` to your frontend's URL (defaults to `*`).
+6. First deploy runs `npm start`, which runs migrations on boot. Health check: `https://<service>.up.railway.app/api/health` should return `{"ok":true,...}`.
+
+### Connect the frontend
+
+- Open the app, click **⚙ Settings**, paste the Railway URL, **Test connection**, **Save**.
+- (Or pre-bake by editing `assets/config.js` → `apiBase`.)
+- Use **Sync local → backend** in Settings to push existing local-only contributions to the new database.
+
+### What the backend does
+
+- Accepts `POST /api/products`, `POST /api/products/:id/alternatives`, `POST /api/products/:id/notes`.
+- `GET /api/products` returns everything for the frontend to merge with the curated dataset.
+- Rate-limited (30 writes/min, 200 reads/min per IP), input length-validated, no auth.
+- No reviews, no aggregated ratings — notes are factual user experience, displayed as-is, attributed to "Community note".
+
+See `server/README.md` for the schema and full endpoint reference.
+
 ## Caveats
 
 - Diplomatic, diaspora, and trade figures are indicative and dated; the app links to primary sources for verification.
 - Open Food Facts data is community-maintained — fields like `countries_tags` may be missing or imprecise on some products. The app surfaces what's there and labels gaps as "Origin unknown" rather than guessing.
-- A real multi-user community feature (other users seeing your contributions live) needs a database backend (Supabase / Firebase / a custom API). Until that's wired up, contributions are local until submitted.
+- The backend is anonymous + rate-limited, with no moderation queue yet. If spam becomes a problem, add a `pending` flag and an admin approval endpoint.

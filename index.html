@@ -18,6 +18,7 @@
         <button id="add-product" class="icon-btn" type="button" title="Add a product / brand">＋ Product</button>
         <button id="export-contribs" class="icon-btn" type="button" title="Export your contributions as JSON">⇩ Export</button>
         <button id="submit-contribs" class="icon-btn" type="button" title="Submit your contributions as a GitHub issue">⇧ Submit</button>
+        <button id="settings" class="icon-btn" type="button" title="Backend settings">⚙ Settings</button>
         <button id="surprise" class="icon-btn" type="button" title="Surprise me">🎲</button>
         <button id="theme-toggle" class="icon-btn" type="button" title="Toggle theme">🌓</button>
       </div>
@@ -167,6 +168,28 @@
     </p>
   </footer>
 
+  <!-- Settings modal -->
+  <div id="settings-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="settings-title">
+    <div class="modal-card">
+      <button class="modal-close" data-close-modal aria-label="Close">&times;</button>
+      <h2 id="settings-title">Backend settings</h2>
+      <p class="modal-sub">Connect to a Swadeshi Swap API server (e.g. your own Railway deployment). Once connected, your contributions are saved to the shared database and other users see them. Leave empty to stay local-only.</p>
+      <form id="settings-form" class="form">
+        <label>API base URL
+          <input name="apiBase" id="settings-api-base" placeholder="https://your-service.up.railway.app" autocomplete="off"/>
+        </label>
+        <div id="settings-status" class="meta"></div>
+        <div class="form-actions">
+          <button type="button" id="settings-test" class="reset-btn">Test connection</button>
+          <button type="button" id="settings-sync" class="reset-btn" title="Push local-only contributions to the connected backend">Sync local → backend</button>
+          <button type="button" data-close-modal class="reset-btn">Cancel</button>
+          <button type="submit" class="primary-btn">Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="assets/config.js"></script>
   <script src="data/countries.js"></script>
   <script src="data/products.js"></script>
   <script src="assets/app.js"></script>

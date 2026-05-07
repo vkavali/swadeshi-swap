@@ -1,0 +1,19 @@
+{
+  "name": "swadeshi-swap-api",
+  "version": "1.0.0",
+  "description": "Backend API for Swadeshi Swap — accepts community-submitted products, alternatives, and notes.",
+  "type": "module",
+  "main": "index.js",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node --watch index.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "express-rate-limit": "^7.4.1",
+    "helmet": "^8.0.0",
+    "pg": "^8.13.1"
+  }
+}
