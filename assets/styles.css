@@ -7,6 +7,8 @@
   --saffron: #c86b15;
   --saffron-wash: #fdf3e8;
   --saffron-glow: rgba(200, 107, 21, .12);
+  --saffron-glow-strong: 0 0 20px rgba(200, 107, 21, .25), 0 0 60px rgba(200, 107, 21, .08);
+  --green-glow: 0 0 20px rgba(26, 107, 46, .2), 0 0 60px rgba(26, 107, 46, .06);
   --green: #1a6b2e;
   --green-wash: #eef6f0;
 
@@ -43,6 +45,8 @@
   --border-hard: rgba(232, 228, 222, .16);
   --saffron-wash: rgba(200, 107, 21, .10);
   --saffron-glow: rgba(200, 107, 21, .15);
+  --saffron-glow-strong: 0 0 24px rgba(200, 107, 21, .35), 0 0 60px rgba(200, 107, 21, .12);
+  --green-glow: 0 0 24px rgba(60, 163, 78, .25), 0 0 60px rgba(60, 163, 78, .08);
   --green-wash: rgba(26, 107, 46, .10);
   --prefer: #3da34e;
   --caution: #e08a1a;
@@ -254,7 +258,7 @@ a { color: var(--ink); }
 }
 .search-wrapper input:focus {
   border-color: var(--saffron);
-  box-shadow: 0 0 0 6px var(--saffron-glow);
+  box-shadow: 0 0 0 6px var(--saffron-glow), var(--saffron-glow-strong);
 }
 .search-wrapper input::placeholder {
   color: var(--ink-3);
@@ -308,6 +312,22 @@ a { color: var(--ink); }
 .tab.active {
   color: var(--saffron);
   border-bottom-color: var(--saffron);
+}
+
+/* dark-to-light transition band below hero */
+#panel-catalogue,
+#panel-live {
+  position: relative;
+}
+#panel-catalogue::before,
+#panel-live::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 80px;
+  background: linear-gradient(to bottom, color-mix(in srgb, var(--hero-bg) 6%, transparent), transparent);
+  pointer-events: none;
+  z-index: 0;
 }
 
 /* ==============================================
@@ -527,8 +547,10 @@ main {
 
 .card:hover {
   transform: translateY(-6px);
-  box-shadow: 0 20px 60px rgba(26, 20, 16, .08);
+  box-shadow: 0 20px 60px rgba(26, 20, 16, .08), 0 0 0 1px var(--border-hard);
 }
+.card[data-rec="avoid"]:hover { box-shadow: 0 20px 60px rgba(26, 20, 16, .08), -4px 0 16px rgba(160, 28, 28, .1); }
+.card[data-rec="prefer"]:hover { box-shadow: 0 20px 60px rgba(26, 20, 16, .08), -4px 0 16px rgba(26, 107, 46, .1); }
 
 @keyframes flash-pulse {
   0%   { outline-color: transparent; }
@@ -938,23 +960,26 @@ main {
 }
 .primary-btn:hover {
   border-radius: 8px;
-  transform: translateY(-1px);
-  box-shadow: 0 8px 24px var(--saffron-glow);
+  transform: translateY(-2px);
+  box-shadow: var(--saffron-glow-strong);
 }
 
 /* ==============================================
    FOOTER
    ============================================== */
 .footer {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 32px;
-  color: var(--ink-3);
+  background: var(--hero-bg);
+  color: color-mix(in srgb, var(--hero-ink) 50%, transparent);
+  padding: 40px 32px;
   font-size: 13px;
   font-style: italic;
-  border-top: 1px solid var(--border);
+  border: none;
 }
-.footer a { color: var(--ink-2); }
+.footer p {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.footer a { color: var(--hero-ink); }
 
 /* ==============================================
    TABLET
@@ -966,7 +991,7 @@ main {
   main { padding: 12px 20px 48px; }
   .hero-headline { font-size: clamp(28px, 5vw, 42px); }
   .brand-tools { gap: 2px; }
-  .footer { padding: 24px 20px; }
+  .footer { padding: 28px 20px; }
 }
 
 /* ==============================================
@@ -1007,5 +1032,5 @@ main {
     to   { opacity: 1; transform: translateY(0); }
   }
 
-  .footer { padding: 20px 16px; }
+  .footer { padding: 24px 16px; }
 }
