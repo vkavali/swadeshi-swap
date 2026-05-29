@@ -15,12 +15,12 @@
         <p class="tag">Find Indian alternatives to foreign products. Real data from public sources. Contribute your own.</p>
       </div>
       <div class="brand-tools">
-        <button id="add-product" class="icon-btn" type="button" title="Add a product / brand">＋ Product</button>
-        <button id="export-contribs" class="icon-btn" type="button" title="Export your contributions as JSON">⇩ Export</button>
-        <button id="import-contribs" class="icon-btn" type="button" title="Import contributions from JSON">⇪ Import</button>
+        <button id="add-product" class="icon-btn" type="button" title="Add a product / brand">＋</button>
+        <button id="export-contribs" class="icon-btn" type="button" title="Export your contributions as JSON">⇩</button>
+        <button id="import-contribs" class="icon-btn" type="button" title="Import contributions from JSON">⇪</button>
         <input id="import-file" class="hidden" type="file" accept="application/json" aria-label="Import contributions JSON" />
-        <button id="submit-contribs" class="icon-btn" type="button" title="Submit your contributions as a GitHub issue">⇧ Submit</button>
-        <button id="settings" class="icon-btn" type="button" title="Backend settings">⚙ Settings</button>
+        <button id="submit-contribs" class="icon-btn" type="button" title="Submit your contributions as a GitHub issue">⇧</button>
+        <button id="settings" class="icon-btn" type="button" title="Backend settings">⚙</button>
         <button id="surprise" class="icon-btn" type="button" title="Surprise me">🎲</button>
         <button id="theme-toggle" class="icon-btn" type="button" title="Toggle theme">🌓</button>
       </div>
@@ -35,41 +35,49 @@
   <!-- Catalogue tab -->
   <section id="panel-catalogue">
     <div class="controls">
-      <input id="search" type="search" placeholder="Search a product or brand (e.g. Maggi, Nike, iPhone)..." aria-label="Search" />
-      <select id="category" aria-label="Filter by category">
-        <option value="">All categories</option>
-      </select>
-      <select id="country" aria-label="Filter by origin country">
-        <option value="">All origin countries</option>
-      </select>
-      <select id="recommendation" aria-label="Filter by recommendation">
-        <option value="">All recommendations</option>
-        <option value="prefer">Prefer</option>
-        <option value="neutral">Neutral</option>
-        <option value="caution">Caution</option>
-        <option value="avoid">Avoid</option>
-      </select>
-      <select id="sort" aria-label="Sort">
-        <option value="default">Sort: default</option>
-        <option value="recommendation">Sort: by recommendation</option>
-        <option value="alpha">Sort: A → Z</option>
-        <option value="category">Sort: by category</option>
-        <option value="favorites">Sort: favorites first</option>
-        <option value="needs">Sort: needs attention</option>
-      </select>
-      <label class="favs-toggle">
-        <input type="checkbox" id="favs-only" />
-        <span>★ Favorites only</span>
-      </label>
-      <label class="favs-toggle">
-        <input type="checkbox" id="mine-only" />
-        <span>👤 My contributions</span>
-      </label>
-      <label class="favs-toggle">
-        <input type="checkbox" id="needs-only" />
-        <span>Needs alternatives</span>
-      </label>
-      <button id="reset" type="button" class="reset-btn">Reset</button>
+      <div class="search-wrapper">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input id="search" type="search" placeholder="Search a product or brand (e.g. Maggi, Nike, iPhone)..." aria-label="Search" />
+      </div>
+      <details class="filter-panel" id="filter-panel">
+        <summary>Filters &amp; sort <span class="filter-badge" id="filter-badge" data-count="0">0</span></summary>
+        <div class="filter-content">
+          <select id="category" aria-label="Filter by category">
+            <option value="">All categories</option>
+          </select>
+          <select id="country" aria-label="Filter by origin country">
+            <option value="">All origin countries</option>
+          </select>
+          <select id="recommendation" aria-label="Filter by recommendation">
+            <option value="">All recommendations</option>
+            <option value="prefer">Prefer</option>
+            <option value="neutral">Neutral</option>
+            <option value="caution">Caution</option>
+            <option value="avoid">Avoid</option>
+          </select>
+          <select id="sort" aria-label="Sort">
+            <option value="default">Sort: default</option>
+            <option value="recommendation">Sort: by recommendation</option>
+            <option value="alpha">Sort: A &rarr; Z</option>
+            <option value="category">Sort: by category</option>
+            <option value="favorites">Sort: favorites first</option>
+            <option value="needs">Sort: needs attention</option>
+          </select>
+          <label class="favs-toggle">
+            <input type="checkbox" id="favs-only" />
+            <span>★ Favorites only</span>
+          </label>
+          <label class="favs-toggle">
+            <input type="checkbox" id="mine-only" />
+            <span>👤 My contributions</span>
+          </label>
+          <label class="favs-toggle">
+            <input type="checkbox" id="needs-only" />
+            <span>Needs alternatives</span>
+          </label>
+          <button id="reset" type="button" class="reset-btn">Reset all</button>
+        </div>
+      </details>
     </div>
 
     <main>
@@ -107,6 +115,7 @@
       <h2 id="add-title">Add a product</h2>
       <p class="modal-sub">Saved on this device. Click <strong>Submit</strong> later to send your contributions to the maintainers as a GitHub issue.</p>
       <form id="add-form" class="form">
+        <div class="form-step-label">Foreign product details</div>
         <label>Foreign product name<input name="fName" required placeholder="e.g. Pampers diapers"/></label>
         <label>Foreign brand<input name="fBrand" required placeholder="e.g. Procter & Gamble"/></label>
         <label>Origin country
@@ -114,6 +123,7 @@
         </label>
         <label>Category<input name="category" required placeholder="e.g. Baby care"/></label>
         <label>Foreign price (₹, optional)<input name="fPrice" placeholder="e.g. ₹500 / pack"/></label>
+        <div class="form-step-label">Indian alternative</div>
         <fieldset>
           <legend>Indian alternative</legend>
           <label>Name<input name="iName" required placeholder="e.g. MamyPoko Pants"/></label>

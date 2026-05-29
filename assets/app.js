@@ -76,7 +76,8 @@
     noteModal: $("note-modal"), noteForm: $("note-form"), noteContext: $("note-context"),
     panelCatalogue: $("panel-catalogue"), panelLive: $("panel-live"),
     liveQ: $("live-q"), liveGo: $("live-go"), liveGrid: $("live-grid"), liveMeta: $("live-meta"),
-    tabs: document.querySelectorAll(".tab")
+    tabs: document.querySelectorAll(".tab"),
+    filterBadge: $("filter-badge")
   };
 
   // -------- Helpers --------
@@ -216,30 +217,52 @@
 
     els.insights.innerHTML = `
       <div class="insight">
-        <strong>${filtered.length}</strong>
+        <strong data-count="${filtered.length}">${filtered.length}</strong>
         <span>visible of ${total}</span>
       </div>
       <div class="insight ${watch ? "warning" : ""}">
-        <strong>${watch}</strong>
+        <strong data-count="${watch}">${watch}</strong>
         <span>from avoid/caution countries</span>
       </div>
       <div class="insight ${needs ? "warning" : ""}">
-        <strong>${needs}</strong>
+        <strong data-count="${needs}">${needs}</strong>
         <span>need Indian alternatives</span>
       </div>
       <div class="insight">
-        <strong>${visibleAlts}</strong>
+        <strong data-count="${visibleAlts}">${visibleAlts}</strong>
         <span>alternatives in view</span>
       </div>
       <div class="insight">
-        <strong>${categories}</strong>
+        <strong data-count="${categories}">${categories}</strong>
         <span>${topCategory ? `categories, top: ${escapeHtml(topCategory[0])}` : "categories"}</span>
       </div>
       <div class="insight">
-        <strong>${userVisible}</strong>
+        <strong data-count="${userVisible}">${userVisible}</strong>
         <span>community or local</span>
       </div>
     `;
+    animateCounters();
+  }
+
+  // -------- Animate insight counters --------
+  function animateCounters() {
+    const targets = els.insights.querySelectorAll("strong[data-count]");
+    targets.forEach(el => {
+      const target = parseInt(el.dataset.count, 10);
+      if (isNaN(target) || target === 0) { el.textContent = "0"; return; }
+      const duration = 600;
+      const start = performance.now();
+      el.textContent = "0";
+      function tick(now) {
+        const elapsed = now - start;
+        const progress = Math.min(elapsed / duration, 1);
+        // Ease-out cubic
+        const eased = 1 - Math.pow(1 - progress, 3);
+        el.textContent = Math.round(eased * target);
+        if (progress < 1) requestAnimationFrame(tick);
+      }
+      requestAnimationFrame(tick);
+    });
   }
 
   // -------- Render product card --------
@@ -275,9 +298,19 @@
     const userNotes = communityNotes + localNotes;
     const needsAlt = productNeedsAlternatives(p);
 
+    const altCount = (p.indian || []).length;
+    const altsOpen = altCount <= 2;
+    const altsSection = altCount > 0
+      ? `<details class="alts-panel"${altsOpen ? " open" : ""}>
+           <summary>Indian alternatives <span class="alt-count">${altCount}</span></summary>
+           <div>${altsHtml}</div>
+         </details>`
+      : `<div class="alts"><h4>Indian alternatives</h4><div class="meta">No alternatives mapped yet — be the first to suggest one.</div></div>`;
+
     const card = document.createElement("article");
     card.className = "card";
     card.id = "card-" + p.id;
+    card.setAttribute("data-rec", country.recommendation || "neutral");
     card.innerHTML = `
       <div class="row">
         <div class="foreign">
@@ -291,7 +324,7 @@
       </div>
       <div class="quality-row">
         <span class="quality-chip">${productSourceLabel(p)}</span>
-        <span class="quality-chip">${(p.indian || []).length} alternative${(p.indian || []).length === 1 ? "" : "s"}</span>
+        <span class="quality-chip">${altCount} alternative${altCount === 1 ? "" : "s"}</span>
         ${needsAlt ? '<span class="quality-chip attention">Needs mapping</span>' : ""}
       </div>
       <div class="row">
@@ -302,10 +335,7 @@
         <span class="rec ${country.recommendation || "neutral"}">${recLabel(country.recommendation)}</span>
       </div>
       <div class="divider"></div>
-      <div class="alts">
-        <h4>Indian alternatives</h4>
-        ${altsHtml || '<div class="meta">No alternatives mapped yet — be the first to suggest one.</div>'}
-      </div>
+      ${altsSection}
       <div class="suggest-row">
         <button class="link-btn" data-add-alt="${p.id}" type="button">＋ Suggest an alternative</button>
         <button class="link-btn" data-add-note="${p.id}" type="button">＋ Add your note</button>
@@ -362,12 +392,39 @@
     });
 
     filtered = sortProducts(filtered);
+
+    // Grid opacity fade
+    els.grid.style.opacity = "0";
     els.grid.innerHTML = "";
-    for (const p of filtered) els.grid.appendChild(renderCard(p));
+    let cardIndex = 0;
+    for (const p of filtered) {
+      const card = renderCard(p);
+      card.style.setProperty("--card-index", cardIndex++);
+      els.grid.appendChild(card);
+    }
+    // Trigger reflow then fade in
+    void els.grid.offsetHeight;
+    els.grid.style.opacity = "1";
+
     els.empty.classList.toggle("hidden", filtered.length > 0);
     els.meta.textContent = `${filtered.length} of ${allProducts().length} products`;
     renderInsights(filtered);
     renderStats();
+
+    // Update active filter count badge
+    let activeCount = 0;
+    if (cat) activeCount++;
+    if (ctry) activeCount++;
+    if (rec) activeCount++;
+    if (els.sort.value && els.sort.value !== "default") activeCount++;
+    if (els.favsOnly.checked) activeCount++;
+    if (els.mineOnly.checked) activeCount++;
+    if (els.needsOnly.checked) activeCount++;
+    if (els.filterBadge) {
+      els.filterBadge.textContent = activeCount;
+      els.filterBadge.setAttribute("data-count", activeCount);
+    }
+
     if (!skipUrl) writeUrl();
   }
 
