@@ -218,27 +218,27 @@
     els.insights.innerHTML = `
       <div class="insight">
         <strong data-count="${filtered.length}">${filtered.length}</strong>
-        <span>visible of ${total}</span>
+        <span>Visible of ${total}</span>
       </div>
       <div class="insight ${watch ? "warning" : ""}">
         <strong data-count="${watch}">${watch}</strong>
-        <span>from avoid/caution countries</span>
+        <span>Avoid / Caution</span>
       </div>
       <div class="insight ${needs ? "warning" : ""}">
         <strong data-count="${needs}">${needs}</strong>
-        <span>need Indian alternatives</span>
+        <span>Need alternatives</span>
       </div>
       <div class="insight">
         <strong data-count="${visibleAlts}">${visibleAlts}</strong>
-        <span>alternatives in view</span>
+        <span>Alternatives</span>
       </div>
       <div class="insight">
         <strong data-count="${categories}">${categories}</strong>
-        <span>${topCategory ? `categories, top: ${escapeHtml(topCategory[0])}` : "categories"}</span>
+        <span>${topCategory ? escapeHtml(topCategory[0]) : "Categories"}</span>
       </div>
       <div class="insight">
         <strong data-count="${userVisible}">${userVisible}</strong>
-        <span>community or local</span>
+        <span>Community</span>
       </div>
     `;
     animateCounters();
