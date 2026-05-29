@@ -68,7 +68,7 @@ html, body {
 .brand h1 { margin: 0; font-size: 22px; letter-spacing: -0.01em; }
 .brand .tag { margin: 2px 0 0; color: var(--muted); font-size: 14px; }
 
-.brand-tools { display: flex; gap: 8px; }
+.brand-tools { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
 .icon-btn {
   background: var(--card); border: 1px solid var(--line); color: var(--ink);
   border-radius: 10px; padding: 8px 12px; font-size: 16px; cursor: pointer;
@@ -92,7 +92,7 @@ html, body {
   margin: 16px auto 8px;
   padding: 0 24px;
   display: grid;
-  grid-template-columns: 1.6fr 1fr 1fr 1fr 1fr auto auto;
+  grid-template-columns: minmax(260px, 2fr) repeat(4, minmax(130px, 1fr));
   gap: 10px;
   align-items: center;
 }
@@ -117,7 +117,13 @@ html, body {
   padding: 8px 10px; border-radius: 10px; cursor: pointer;
   white-space: nowrap;
 }
-.favs-toggle input { accent-color: var(--saffron); }
+.favs-toggle input {
+  appearance: auto;
+  width: 14px;
+  height: 14px;
+  padding: 0;
+  accent-color: var(--saffron);
+}
 .reset-btn {
   background: var(--card); border: 1px solid var(--line);
   color: var(--ink); padding: 9px 12px; border-radius: 10px;
@@ -127,6 +133,36 @@ html, body {
 
 main { max-width: 1200px; margin: 0 auto; padding: 8px 24px 40px; }
 .results-meta { color: var(--muted); font-size: 13px; padding: 8px 2px 14px; }
+
+.insights {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(155px, 1fr));
+  gap: 10px;
+  margin: 0 0 14px;
+}
+.insight {
+  border: 1px solid var(--line);
+  background: var(--card);
+  border-radius: 10px;
+  padding: 10px 12px;
+  min-height: 58px;
+}
+.insight strong {
+  display: block;
+  font-size: 20px;
+  line-height: 1;
+  color: var(--ink);
+}
+.insight span {
+  display: block;
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 12px;
+}
+.insight.warning {
+  border-color: color-mix(in srgb, var(--caution) 35%, var(--line));
+  background: color-mix(in srgb, var(--caution) 8%, var(--card));
+}
 
 .grid {
   display: grid;
@@ -148,6 +184,20 @@ main { max-width: 1200px; margin: 0 auto; padding: 8px 24px 40px; }
 }
 .card.flash { outline: 2px solid var(--saffron); }
 .card .row { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+.quality-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: -4px; }
+.quality-chip {
+  font-size: 11px;
+  color: var(--muted);
+  background: var(--chip-bg);
+  border: 1px solid var(--line);
+  padding: 3px 7px;
+  border-radius: 999px;
+}
+.quality-chip.attention {
+  color: var(--caution);
+  border-color: color-mix(in srgb, var(--caution) 35%, var(--line));
+  background: color-mix(in srgb, var(--caution) 10%, var(--card));
+}
 .category-pill {
   font-size: 11px; text-transform: uppercase; letter-spacing: .05em;
   background: var(--pill-bg); color: var(--pill-ink);
@@ -349,11 +399,19 @@ main { max-width: 1200px; margin: 0 auto; padding: 8px 24px 40px; }
 .footer a { color: var(--ink); }
 
 @media (max-width: 960px) {
+  .brand { align-items: flex-start; flex-wrap: wrap; }
+  .brand-tools { justify-content: flex-start; width: 100%; }
   .controls { grid-template-columns: 1fr 1fr 1fr; }
   .controls input { grid-column: 1 / -1; }
   .favs-toggle, .reset-btn { grid-column: span 1; }
 }
 @media (max-width: 600px) {
+  .topbar { padding: 16px; }
+  .brand-mark { font-size: 30px; }
+  .brand h1 { font-size: 20px; }
+  .icon-btn { font-size: 13px; padding: 7px 9px; border-radius: 8px; }
   .controls { grid-template-columns: 1fr 1fr; }
   .controls input { grid-column: 1 / -1; }
+  .grid { grid-template-columns: 1fr; }
+  .insights { grid-template-columns: 1fr 1fr; }
 }

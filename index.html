@@ -17,6 +17,8 @@
       <div class="brand-tools">
         <button id="add-product" class="icon-btn" type="button" title="Add a product / brand">＋ Product</button>
         <button id="export-contribs" class="icon-btn" type="button" title="Export your contributions as JSON">⇩ Export</button>
+        <button id="import-contribs" class="icon-btn" type="button" title="Import contributions from JSON">⇪ Import</button>
+        <input id="import-file" class="hidden" type="file" accept="application/json" aria-label="Import contributions JSON" />
         <button id="submit-contribs" class="icon-btn" type="button" title="Submit your contributions as a GitHub issue">⇧ Submit</button>
         <button id="settings" class="icon-btn" type="button" title="Backend settings">⚙ Settings</button>
         <button id="surprise" class="icon-btn" type="button" title="Surprise me">🎲</button>
@@ -53,6 +55,7 @@
         <option value="alpha">Sort: A → Z</option>
         <option value="category">Sort: by category</option>
         <option value="favorites">Sort: favorites first</option>
+        <option value="needs">Sort: needs attention</option>
       </select>
       <label class="favs-toggle">
         <input type="checkbox" id="favs-only" />
@@ -62,11 +65,16 @@
         <input type="checkbox" id="mine-only" />
         <span>👤 My contributions</span>
       </label>
+      <label class="favs-toggle">
+        <input type="checkbox" id="needs-only" />
+        <span>Needs alternatives</span>
+      </label>
       <button id="reset" type="button" class="reset-btn">Reset</button>
     </div>
 
     <main>
       <div id="results-meta" class="results-meta"></div>
+      <div id="insights" class="insights"></div>
       <div id="grid" class="grid"></div>
       <div id="empty" class="empty hidden">No products match your filters.</div>
     </main>

@@ -65,10 +65,11 @@
   const els = {
     search: $("search"), category: $("category"), country: $("country"),
     recommendation: $("recommendation"), sort: $("sort"),
-    favsOnly: $("favs-only"), mineOnly: $("mine-only"),
+    favsOnly: $("favs-only"), mineOnly: $("mine-only"), needsOnly: $("needs-only"),
     reset: $("reset"), surprise: $("surprise"), themeToggle: $("theme-toggle"),
-    addProduct: $("add-product"), exportContribs: $("export-contribs"), submitContribs: $("submit-contribs"),
-    grid: $("grid"), empty: $("empty"), meta: $("results-meta"), stats: $("stats"),
+    addProduct: $("add-product"), exportContribs: $("export-contribs"), importContribs: $("import-contribs"),
+    importFile: $("import-file"), submitContribs: $("submit-contribs"),
+    grid: $("grid"), empty: $("empty"), meta: $("results-meta"), insights: $("insights"), stats: $("stats"),
     modal: $("modal"), modalBody: $("modal-body"),
     addModal: $("add-modal"), addForm: $("add-form"), addCountry: $("add-country"),
     altModal: $("alt-modal"), altForm: $("alt-form"), altContext: $("alt-context"),
@@ -96,6 +97,36 @@
     return ({ prefer: "Prefer", neutral: "Neutral", caution: "Caution", avoid: "Avoid" })[r] || "—";
   }
   const REC_ORDER = { avoid: 0, caution: 1, neutral: 2, prefer: 3 };
+
+  function hasContributions(data = contribs) {
+    return Boolean(
+      (data.products || []).length ||
+      Object.values(data.alternatives || {}).some(items => (items || []).length) ||
+      Object.values(data.notes || {}).some(items => (items || []).length)
+    );
+  }
+
+  function productNeedsAlternatives(p) {
+    return !(p.indian || []).length;
+  }
+
+  function productSourceLabel(p) {
+    if (p._user) return "You";
+    if (p._community) return "Community";
+    return "Curated";
+  }
+
+  function searchTextFor(p) {
+    const country = COUNTRIES[p.foreign.country] || {};
+    return [
+      p.foreign.name, p.foreign.brand, p.category, p.notes,
+      country.name, country.recommendation, country.relationship,
+      country.treatmentOfIndians, country.tradeBalance,
+      ...(p.indian || []).flatMap(a => [a.name, a.brand, a.madeIn, a.priceInr]),
+      ...(contribs.notes[p.id] || []).map(n => n.text),
+      ...(serverNotesByPid[p.id] || []).map(n => n.text)
+    ].join(" ").toLowerCase();
+  }
 
   // Combined catalogue = curated + community (from backend) + user-local-only
   function allProducts() {
@@ -168,6 +199,49 @@
     `;
   }
 
+  function renderInsights(filtered) {
+    const total = allProducts().length;
+    const visibleAlts = filtered.reduce((n, p) => n + (p.indian || []).length, 0);
+    const needs = filtered.filter(productNeedsAlternatives).length;
+    const watch = filtered.filter(p => {
+      const rec = (COUNTRIES[p.foreign.country] || {}).recommendation;
+      return rec === "avoid" || rec === "caution";
+    }).length;
+    const userVisible = filtered.filter(p => p._user || p._community).length;
+    const categories = new Set(filtered.map(p => p.category)).size;
+    const topCategory = Object.entries(filtered.reduce((acc, p) => {
+      acc[p.category] = (acc[p.category] || 0) + 1;
+      return acc;
+    }, {})).sort((a, b) => b[1] - a[1])[0];
+
+    els.insights.innerHTML = `
+      <div class="insight">
+        <strong>${filtered.length}</strong>
+        <span>visible of ${total}</span>
+      </div>
+      <div class="insight ${watch ? "warning" : ""}">
+        <strong>${watch}</strong>
+        <span>from avoid/caution countries</span>
+      </div>
+      <div class="insight ${needs ? "warning" : ""}">
+        <strong>${needs}</strong>
+        <span>need Indian alternatives</span>
+      </div>
+      <div class="insight">
+        <strong>${visibleAlts}</strong>
+        <span>alternatives in view</span>
+      </div>
+      <div class="insight">
+        <strong>${categories}</strong>
+        <span>${topCategory ? `categories, top: ${escapeHtml(topCategory[0])}` : "categories"}</span>
+      </div>
+      <div class="insight">
+        <strong>${userVisible}</strong>
+        <span>community or local</span>
+      </div>
+    `;
+  }
+
   // -------- Render product card --------
   function renderCard(p) {
     const country = COUNTRIES[p.foreign.country] || { name: p.foreign.country, flag: "🏳️", recommendation: "neutral" };
@@ -199,6 +273,7 @@
       </div>
     `).join("");
     const userNotes = communityNotes + localNotes;
+    const needsAlt = productNeedsAlternatives(p);
 
     const card = document.createElement("article");
     card.className = "card";
@@ -213,6 +288,11 @@
           <span class="category-pill">${escapeHtml(p.category)}</span>
           <button class="fav-btn ${isFav ? "on" : ""}" data-fav="${p.id}" type="button" aria-pressed="${isFav}" title="Favorite">${isFav ? "★" : "☆"}</button>
         </div>
+      </div>
+      <div class="quality-row">
+        <span class="quality-chip">${productSourceLabel(p)}</span>
+        <span class="quality-chip">${(p.indian || []).length} alternative${(p.indian || []).length === 1 ? "" : "s"}</span>
+        ${needsAlt ? '<span class="quality-chip attention">Needs mapping</span>' : ""}
       </div>
       <div class="row">
         <button class="country-chip" data-country="${country.code || p.foreign.country}" type="button">
@@ -248,6 +328,14 @@
       return (REC_ORDER[ra] ?? 9) - (REC_ORDER[rb] ?? 9) || a.foreign.name.localeCompare(b.foreign.name);
     });
     else if (mode === "favorites") arr.sort((a, b) => Number(favs.has(b.id)) - Number(favs.has(a.id)));
+    else if (mode === "needs") arr.sort((a, b) => {
+      const ra = (COUNTRIES[a.foreign.country] || {}).recommendation || "neutral";
+      const rb = (COUNTRIES[b.foreign.country] || {}).recommendation || "neutral";
+      return Number(productNeedsAlternatives(b)) - Number(productNeedsAlternatives(a))
+        || (a.indian || []).length - (b.indian || []).length
+        || (REC_ORDER[ra] ?? 9) - (REC_ORDER[rb] ?? 9)
+        || a.foreign.name.localeCompare(b.foreign.name);
+    });
     return arr;
   }
 
@@ -262,14 +350,13 @@
       if (ctry && p.foreign.country !== ctry) return false;
       if (els.favsOnly.checked && !favs.has(p.id)) return false;
       if (els.mineOnly.checked && !p._user) return false;
+      if (els.needsOnly.checked && !productNeedsAlternatives(p)) return false;
       if (rec) {
         const c = COUNTRIES[p.foreign.country];
         if (!c || c.recommendation !== rec) return false;
       }
       if (q) {
-        const hay = [p.foreign.name, p.foreign.brand, p.category,
-          ...p.indian.flatMap(a => [a.name, a.brand])].join(" ").toLowerCase();
-        if (!hay.includes(q)) return false;
+        if (!searchTextFor(p).includes(q)) return false;
       }
       return true;
     });
@@ -279,6 +366,7 @@
     for (const p of filtered) els.grid.appendChild(renderCard(p));
     els.empty.classList.toggle("hidden", filtered.length > 0);
     els.meta.textContent = `${filtered.length} of ${allProducts().length} products`;
+    renderInsights(filtered);
     renderStats();
     if (!skipUrl) writeUrl();
   }
@@ -558,8 +646,91 @@
     els.noteModal.classList.add("hidden");
   });
 
-  // Export contributions
+  function compactContributionPayload(raw) {
+    if (!raw || typeof raw !== "object") throw new Error("JSON must be an object.");
+    const products = Array.isArray(raw.products)
+      ? raw.products.filter(p =>
+          p && p.id && p.category && p.foreign &&
+          p.foreign.name && p.foreign.brand && p.foreign.country &&
+          Array.isArray(p.indian)
+        )
+      : [];
+
+    function compactMap(map, keep) {
+      if (!map || typeof map !== "object") return {};
+      return Object.fromEntries(Object.entries(map)
+        .map(([id, items]) => [id, Array.isArray(items) ? items.filter(keep) : []])
+        .filter(([, items]) => items.length));
+    }
+
+    const alternatives = compactMap(raw.alternatives, a => a && a.name && a.brand);
+    const notes = compactMap(raw.notes, n => n && n.text);
+    const payload = { products, alternatives, notes };
+    if (!hasContributions(payload)) throw new Error("No valid products, alternatives, or notes found.");
+    return payload;
+  }
+
+  function mergeContributions(incoming) {
+    let products = 0, alternatives = 0, notes = 0;
+    const productIds = new Set(contribs.products.map(p => p.id));
+    for (const p of incoming.products) {
+      if (productIds.has(p.id)) continue;
+      contribs.products.push(p);
+      productIds.add(p.id);
+      products++;
+    }
+
+    for (const [pid, items] of Object.entries(incoming.alternatives)) {
+      contribs.alternatives[pid] = contribs.alternatives[pid] || [];
+      const seen = new Set(contribs.alternatives[pid].map(a => [a.name, a.brand, a.priceInr, a.madeIn].join("|").toLowerCase()));
+      for (const a of items) {
+        const key = [a.name, a.brand, a.priceInr, a.madeIn].join("|").toLowerCase();
+        if (seen.has(key)) continue;
+        contribs.alternatives[pid].push(a);
+        seen.add(key);
+        alternatives++;
+      }
+    }
+
+    for (const [pid, items] of Object.entries(incoming.notes)) {
+      contribs.notes[pid] = contribs.notes[pid] || [];
+      const seen = new Set(contribs.notes[pid].map(n => String(n.text || "").trim().toLowerCase()));
+      for (const n of items) {
+        const text = String(n.text || "").trim();
+        const key = text.toLowerCase();
+        if (!text || seen.has(key)) continue;
+        contribs.notes[pid].push({ text, ts: n.ts || Date.now() });
+        seen.add(key);
+        notes++;
+      }
+    }
+
+    saveContribs();
+    return { products, alternatives, notes };
+  }
+
+  // Import / export contributions
+  els.importContribs.addEventListener("click", () => els.importFile.click());
+  els.importFile.addEventListener("change", async () => {
+    const file = els.importFile.files && els.importFile.files[0];
+    els.importFile.value = "";
+    if (!file) return;
+    try {
+      const incoming = compactContributionPayload(JSON.parse(await file.text()));
+      const counts = mergeContributions(incoming);
+      populateFilters();
+      applyFilters();
+      alert(`Imported ${counts.products} products, ${counts.alternatives} alternatives, and ${counts.notes} notes.`);
+    } catch (err) {
+      alert("Import failed: " + err.message);
+    }
+  });
+
   els.exportContribs.addEventListener("click", () => {
+    if (!hasContributions()) {
+      alert("No local contributions to export yet.");
+      return;
+    }
     const blob = new Blob([JSON.stringify(contribs, null, 2)], { type: "application/json" });
     const a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
@@ -571,6 +742,10 @@
 
   // Submit as GitHub issue
   els.submitContribs.addEventListener("click", () => {
+    if (!hasContributions()) {
+      alert("No local contributions to submit yet.");
+      return;
+    }
     const body = "```json\n" + JSON.stringify(contribs, null, 2) + "\n```";
     const url = "https://github.com/vkavali/swadeshi-swap/issues/new"
       + "?title=" + encodeURIComponent("Community contribution: products / alternatives / notes")
@@ -595,6 +770,7 @@
     if (params.get("sort")) els.sort.value = params.get("sort");
     if (params.get("fav") === "1") els.favsOnly.checked = true;
     if (params.get("mine") === "1") els.mineOnly.checked = true;
+    if (params.get("needs") === "1") els.needsOnly.checked = true;
   }
   function writeUrl() {
     const params = new URLSearchParams();
@@ -606,6 +782,7 @@
     if (els.sort.value && els.sort.value !== "default") params.set("sort", els.sort.value);
     if (els.favsOnly.checked) params.set("fav", "1");
     if (els.mineOnly.checked) params.set("mine", "1");
+    if (els.needsOnly.checked) params.set("needs", "1");
     const s = params.toString();
     const newHash = s ? "#" + s : "";
     if (location.hash !== newHash) history.replaceState(null, "", location.pathname + location.search + newHash);
@@ -630,7 +807,7 @@
   function surpriseMe() {
     activateTab("catalogue");
     els.search.value = ""; els.category.value = ""; els.country.value = "";
-    els.recommendation.value = ""; els.favsOnly.checked = false; els.mineOnly.checked = false;
+    els.recommendation.value = ""; els.favsOnly.checked = false; els.mineOnly.checked = false; els.needsOnly.checked = false;
     els.sort.value = "default";
     applyFilters();
     const list = allProducts();
@@ -645,7 +822,7 @@
   function resetAll() {
     els.search.value = ""; els.category.value = ""; els.country.value = "";
     els.recommendation.value = ""; els.sort.value = "default";
-    els.favsOnly.checked = false; els.mineOnly.checked = false;
+    els.favsOnly.checked = false; els.mineOnly.checked = false; els.needsOnly.checked = false;
     applyFilters();
   }
   els.surprise.addEventListener("click", surpriseMe);
@@ -663,6 +840,7 @@
   [els.category, els.country, els.recommendation, els.sort].forEach(el => el.addEventListener("change", () => applyFilters()));
   els.favsOnly.addEventListener("change", () => applyFilters());
   els.mineOnly.addEventListener("change", () => applyFilters());
+  els.needsOnly.addEventListener("change", () => applyFilters());
 
   els.grid.addEventListener("click", e => {
     const fav = e.target.closest("[data-fav]");

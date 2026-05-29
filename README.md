@@ -25,7 +25,7 @@ python3 -m http.server 8000
 
 ## Tabs
 
-- **📚 Catalogue** — curated pairings + your contributions, with search, category/country/recommendation filters, sort, favorites, dark mode, "surprise me", and shareable URL state.
+- **📚 Catalogue** — curated pairings + your contributions, with search, category/country/recommendation filters, needs-alternatives discovery, sort, favorites, dark mode, "surprise me", and shareable URL state.
 - **🔎 Live search · Open Food Facts** — type a name (e.g. "Nutella"); results come straight from OFF. If we have a curated Indian alternative for that brand, it's shown alongside; otherwise you can click **＋ Suggest one**.
 
 ## Contributions
@@ -34,6 +34,7 @@ This is a static site — there is no backend, so contributions are stored in yo
 
 1. **⇧ Submit** in the header → opens a **pre-filled GitHub issue** at `vkavali/swadeshi-swap` containing your contributions as JSON. Maintainers review and merge into the canonical dataset.
 2. **⇩ Export** → downloads a JSON file you can email or attach to a PR.
+3. **⇪ Import** → restores or merges a previously exported contribution JSON file.
 
 Three kinds of contribution:
 
