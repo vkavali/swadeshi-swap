@@ -32,7 +32,7 @@ python3 -m http.server 8000
 
 This is a static site — there is no backend, so contributions are stored in your browser via `localStorage`. Two ways to share them:
 
-1. **⇧ Submit** in the header → opens a **pre-filled GitHub issue** at `vkavali/Order-managment` containing your contributions as JSON. Maintainers review and merge into the canonical dataset.
+1. **⇧ Submit** in the header → opens a **pre-filled GitHub issue** at `vkavali/swadeshi-swap` containing your contributions as JSON. Maintainers review and merge into the canonical dataset.
 2. **⇩ Export** → downloads a JSON file you can email or attach to a PR.
 
 Three kinds of contribution:
@@ -62,7 +62,7 @@ A small Node + Express + Postgres backend lives in `server/`. Once deployed and 
 ### Deploy in ~5 minutes
 
 1. **Push the repo to GitHub** (already done).
-2. https://railway.app/new → **Deploy from GitHub repo** → pick `vkavali/Order-managment`.
+2. https://railway.app/new → **Deploy from GitHub repo** → pick `vkavali/swadeshi-swap`.
 3. In the service's **Settings → Source → Root Directory**, set `server`.
 4. **Add a Postgres database** to the project (Railway's plugin). It auto-injects `DATABASE_URL` into the service.
 5. (Optional) under Variables, set `ALLOWED_ORIGINS` to your frontend's URL (defaults to `*`).

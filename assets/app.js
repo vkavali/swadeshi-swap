@@ -572,7 +572,7 @@
   // Submit as GitHub issue
   els.submitContribs.addEventListener("click", () => {
     const body = "```json\n" + JSON.stringify(contribs, null, 2) + "\n```";
-    const url = "https://github.com/vkavali/Order-managment/issues/new"
+    const url = "https://github.com/vkavali/swadeshi-swap/issues/new"
       + "?title=" + encodeURIComponent("Community contribution: products / alternatives / notes")
       + "&body=" + encodeURIComponent("Submitting from Swadeshi Swap. Please review and merge into the canonical dataset if appropriate.\n\n" + body);
     if (encodeURIComponent(body).length > 7000) {

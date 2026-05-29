@@ -17,7 +17,7 @@ No auth (anonymous contributions). Rate-limited. Input is length-validated. Ther
 ## Deploy to Railway
 
 1. Push this repo to GitHub (already done).
-2. https://railway.app/new → **Deploy from GitHub repo** → pick `vkavali/Order-managment`.
+2. https://railway.app/new → **Deploy from GitHub repo** → pick `vkavali/swadeshi-swap`.
 3. In the service settings: **Root Directory** → `server`.
 4. Add a **Postgres** plugin to the project. Railway auto-injects `DATABASE_URL`.
 5. (Optional) set `ALLOWED_ORIGINS` to your frontend's URL (e.g. `https://your-static-host.com`). Defaults to `*`.
