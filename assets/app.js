@@ -310,38 +310,38 @@
     const card = document.createElement("article");
     card.className = "card";
     card.id = "card-" + p.id;
-    card.setAttribute("data-rec", country.recommendation || "neutral");
+    const rec = country.recommendation || "neutral";
+    card.setAttribute("data-rec", rec);
     card.innerHTML = `
-      <div class="row">
-        <div class="foreign">
-          <h3>${escapeHtml(p.foreign.name)}${p._user ? '<span class="user-badge">You</span>' : ""}</h3>
-          <div class="brand-line">${escapeHtml(p.foreign.brand)} • ${escapeHtml(p.foreign.priceInr || "")}</div>
-        </div>
-        <div style="display:flex; align-items:center; gap:6px;">
+      <div class="card-header">
+        <div class="card-header-top">
           <span class="category-pill">${escapeHtml(p.category)}</span>
           <button class="fav-btn ${isFav ? "on" : ""}" data-fav="${p.id}" type="button" aria-pressed="${isFav}" title="Favorite">${isFav ? "★" : "☆"}</button>
         </div>
+        <h3 class="card-title">${escapeHtml(p.foreign.name)}${p._user ? '<span class="user-badge">You</span>' : ""}</h3>
+        <div class="card-brand">${escapeHtml(p.foreign.brand)}${p.foreign.priceInr ? " · " + escapeHtml(p.foreign.priceInr) : ""}</div>
       </div>
-      <div class="quality-row">
-        <span class="quality-chip">${productSourceLabel(p)}</span>
-        <span class="quality-chip">${altCount} alternative${altCount === 1 ? "" : "s"}</span>
-        ${needsAlt ? '<span class="quality-chip attention">Needs mapping</span>' : ""}
-      </div>
-      <div class="row">
+      <div class="card-origin">
         <button class="country-chip" data-country="${country.code || p.foreign.country}" type="button">
           <span class="flag">${country.flag || "🏳️"}</span>
-          <span>From ${escapeHtml(country.name || p.foreign.country)}</span>
+          <span>${escapeHtml(country.name || p.foreign.country)}</span>
         </button>
-        <span class="rec ${country.recommendation || "neutral"}">${recLabel(country.recommendation)}</span>
+        <span class="rec ${rec}">${recLabel(rec)}</span>
       </div>
-      <div class="divider"></div>
-      ${altsSection}
-      <div class="suggest-row">
-        <button class="link-btn" data-add-alt="${p.id}" type="button">＋ Suggest an alternative</button>
-        <button class="link-btn" data-add-note="${p.id}" type="button">＋ Add your note</button>
+      <div class="card-tags">
+        <span class="quality-chip">${productSourceLabel(p)}</span>
+        <span class="quality-chip">${altCount} alt${altCount === 1 ? "" : "s"}</span>
+        ${needsAlt ? '<span class="quality-chip attention">Needs mapping</span>' : ""}
       </div>
-      ${p.notes ? `<div class="notes">${escapeHtml(p.notes)}</div>` : ""}
-      ${userNotes}
+      <div class="card-body">
+        ${altsSection}
+        ${p.notes ? `<div class="notes">${escapeHtml(p.notes)}</div>` : ""}
+        ${userNotes}
+      </div>
+      <div class="card-footer">
+        <button class="link-btn" data-add-alt="${p.id}" type="button">＋ Suggest alternative</button>
+        <button class="link-btn" data-add-note="${p.id}" type="button">＋ Add note</button>
+      </div>
     `;
     return card;
   }
@@ -560,19 +560,18 @@
       ${p.image_thumb_url || p.image_small_url
         ? `<img class="live-img" src="${escapeHtml(p.image_thumb_url || p.image_small_url)}" alt="" loading="lazy"/>`
         : `<div class="no-image">No image</div>`}
-      <div class="row">
-        <div class="foreign">
-          <h3>${escapeHtml(name)}</h3>
-          <div class="brand-line">${escapeHtml(brand)}</div>
-        </div>
-        ${country
-          ? `<button class="country-chip" data-country="${country.code}"><span class="flag">${country.flag}</span><span>${escapeHtml(country.name)}</span></button>`
-          : `<span class="meta">Origin unknown</span>`}
+      <div class="card-header" style="padding-top:16px;">
+        <h3 class="card-title">${escapeHtml(name)}</h3>
+        <div class="card-brand">${escapeHtml(brand)}</div>
       </div>
-      ${country ? `<div class="row"><span></span><span class="rec ${country.recommendation || "neutral"}">${recLabel(country.recommendation)}</span></div>` : ""}
-      <div class="divider"></div>
-      <div class="alts"><h4>Indian alternatives</h4>${altsHtml}</div>
-      <div class="meta" style="font-size:11px;">OFF code: <a href="https://world.openfoodfacts.org/product/${escapeHtml(p.code)}" target="_blank" rel="noopener">${escapeHtml(p.code)}</a></div>
+      ${country ? `<div class="card-origin">
+        <button class="country-chip" data-country="${country.code}"><span class="flag">${country.flag}</span><span>${escapeHtml(country.name)}</span></button>
+        <span class="rec ${country.recommendation || "neutral"}">${recLabel(country.recommendation)}</span>
+      </div>` : ""}
+      <div class="card-body">
+        <div class="alts"><h4>Indian alternatives</h4>${altsHtml}</div>
+        <div class="meta" style="font-size:11px; margin-top:10px;">OFF code: <a href="https://world.openfoodfacts.org/product/${escapeHtml(p.code)}" target="_blank" rel="noopener">${escapeHtml(p.code)}</a></div>
+      </div>
     `;
     return card;
   }
