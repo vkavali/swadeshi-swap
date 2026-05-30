@@ -313,34 +313,39 @@
     const rec = country.recommendation || "neutral";
     card.setAttribute("data-rec", rec);
     card.innerHTML = `
-      <div class="card-header">
-        <div class="card-header-top">
-          <span class="category-pill">${escapeHtml(p.category)}</span>
-          <button class="fav-btn ${isFav ? "on" : ""}" data-fav="${p.id}" type="button" aria-pressed="${isFav}" title="Favorite">${isFav ? "★" : "☆"}</button>
+      <div class="card-accent"></div>
+      <div class="card-inner">
+        <div class="card-top">
+          <div class="card-flag-wrap">
+            <button class="card-flag" data-country="${country.code || p.foreign.country}" type="button" title="${escapeHtml(country.name || p.foreign.country)}">${country.flag || "🏳️"}</button>
+            <span class="rec-dot ${rec}"></span>
+          </div>
+          <div class="card-top-right">
+            <span class="category-pill">${escapeHtml(p.category)}</span>
+            <button class="fav-btn ${isFav ? "on" : ""}" data-fav="${p.id}" type="button" aria-pressed="${isFav}" title="Favorite">${isFav ? "★" : "☆"}</button>
+          </div>
         </div>
-        <h3 class="card-title">${escapeHtml(p.foreign.name)}${p._user ? '<span class="user-badge">You</span>' : ""}</h3>
-        <div class="card-brand">${escapeHtml(p.foreign.brand)}${p.foreign.priceInr ? " · " + escapeHtml(p.foreign.priceInr) : ""}</div>
-      </div>
-      <div class="card-origin">
-        <button class="country-chip" data-country="${country.code || p.foreign.country}" type="button">
-          <span class="flag">${country.flag || "🏳️"}</span>
-          <span>${escapeHtml(country.name || p.foreign.country)}</span>
-        </button>
-        <span class="rec ${rec}">${recLabel(rec)}</span>
-      </div>
-      <div class="card-tags">
-        <span class="quality-chip">${productSourceLabel(p)}</span>
-        <span class="quality-chip">${altCount} alt${altCount === 1 ? "" : "s"}</span>
-        ${needsAlt ? '<span class="quality-chip attention">Needs mapping</span>' : ""}
-      </div>
-      <div class="card-body">
-        ${altsSection}
+        <div class="card-identity">
+          <h3 class="card-title">${escapeHtml(p.foreign.name)}${p._user ? '<span class="user-badge">You</span>' : ""}</h3>
+          <div class="card-brand">${escapeHtml(p.foreign.brand)}${p.foreign.priceInr ? " · " + escapeHtml(p.foreign.priceInr) : ""}</div>
+        </div>
+        <div class="card-meta-row">
+          <button class="country-chip" data-country="${country.code || p.foreign.country}" type="button">
+            From ${escapeHtml(country.name || p.foreign.country)}
+          </button>
+          <span class="rec-pill ${rec}">${recLabel(rec)}</span>
+          ${needsAlt ? '<span class="needs-pill">Needs alts</span>' : ""}
+        </div>
+        <div class="card-alts">
+          ${altsSection}
+        </div>
         ${p.notes ? `<div class="notes">${escapeHtml(p.notes)}</div>` : ""}
         ${userNotes}
-      </div>
-      <div class="card-footer">
-        <button class="link-btn" data-add-alt="${p.id}" type="button">＋ Suggest alternative</button>
-        <button class="link-btn" data-add-note="${p.id}" type="button">＋ Add note</button>
+        <div class="card-actions">
+          <button class="action-btn" data-add-alt="${p.id}" type="button"><span class="action-icon">+</span> Suggest alt</button>
+          <button class="action-btn" data-add-note="${p.id}" type="button"><span class="action-icon">✎</span> Note</button>
+          <span class="card-source">${productSourceLabel(p)}</span>
+        </div>
       </div>
     `;
     return card;
@@ -504,8 +509,17 @@
     return null;
   }
 
+  // -------- Eco-score / Nutri-score helpers --------
+  const SCORE_COLORS = { a: "#1e8f4e", b: "#60ac0e", c: "#eeae0e", d: "#ff6f1e", e: "#e63e11" };
+  function scoreHTML(grade, label) {
+    if (!grade || grade === "unknown" || grade === "not-applicable") return "";
+    const g = grade.toLowerCase();
+    const color = SCORE_COLORS[g] || "#888";
+    return `<span class="score-badge" style="--score-color:${color}" title="${label}: ${g.toUpperCase()}">${g.toUpperCase()}</span>`;
+  }
+
   async function searchLive(query) {
-    const url = `https://world.openfoodfacts.org/cgi/search.pl?search_terms=${encodeURIComponent(query)}&search_simple=1&action=process&json=1&page_size=24&fields=code,product_name,brands,brands_tags,countries_tags,origins,image_thumb_url,image_small_url,categories_tags`;
+    const url = `https://world.openfoodfacts.org/cgi/search.pl?search_terms=${encodeURIComponent(query)}&search_simple=1&action=process&json=1&page_size=24&fields=code,product_name,brands,brands_tags,countries_tags,origins,image_thumb_url,image_small_url,categories_tags,ecoscore_grade,ecoscore_score,nutriscore_grade,nutriscore_score`;
     els.liveMeta.textContent = "Searching Open Food Facts…";
     els.liveGrid.innerHTML = "";
     let data;
@@ -556,21 +570,34 @@
           </div>`).join("")
       : `<div class="meta">No Indian alternative is mapped yet for this brand. <button class="link-btn" data-suggest-from-live="1" data-name="${escapeHtml(name)}" data-brand="${escapeHtml(brand)}" data-country="${code || ""}">＋ Suggest one</button></div>`;
 
+    const ecoGrade = p.ecoscore_grade;
+    const nutriGrade = p.nutriscore_grade;
+
     card.innerHTML = `
+      <div class="card-accent"></div>
       ${p.image_thumb_url || p.image_small_url
         ? `<img class="live-img" src="${escapeHtml(p.image_thumb_url || p.image_small_url)}" alt="" loading="lazy"/>`
         : `<div class="no-image">No image</div>`}
-      <div class="card-header" style="padding-top:16px;">
-        <h3 class="card-title">${escapeHtml(name)}</h3>
-        <div class="card-brand">${escapeHtml(brand)}</div>
-      </div>
-      ${country ? `<div class="card-origin">
-        <button class="country-chip" data-country="${country.code}"><span class="flag">${country.flag}</span><span>${escapeHtml(country.name)}</span></button>
-        <span class="rec ${country.recommendation || "neutral"}">${recLabel(country.recommendation)}</span>
-      </div>` : ""}
-      <div class="card-body">
-        <div class="alts"><h4>Indian alternatives</h4>${altsHtml}</div>
-        <div class="meta" style="font-size:11px; margin-top:10px;">OFF code: <a href="https://world.openfoodfacts.org/product/${escapeHtml(p.code)}" target="_blank" rel="noopener">${escapeHtml(p.code)}</a></div>
+      <div class="card-inner">
+        <div class="card-identity">
+          <h3 class="card-title">${escapeHtml(name)}</h3>
+          <div class="card-brand">${escapeHtml(brand)}</div>
+        </div>
+        <div class="score-row">
+          ${scoreHTML(ecoGrade, "Eco-Score")}${ecoGrade && ecoGrade !== "unknown" ? '<span class="score-label">Eco</span>' : ""}
+          ${scoreHTML(nutriGrade, "Nutri-Score")}${nutriGrade && nutriGrade !== "unknown" ? '<span class="score-label">Nutri</span>' : ""}
+          ${(!ecoGrade || ecoGrade === "unknown") && (!nutriGrade || nutriGrade === "unknown") ? '<span class="score-label" style="opacity:.4">No scores available</span>' : ""}
+        </div>
+        ${country ? `<div class="card-meta-row">
+          <button class="country-chip" data-country="${country.code}">From ${escapeHtml(country.name)}</button>
+          <span class="rec-pill ${country.recommendation || "neutral"}">${recLabel(country.recommendation)}</span>
+        </div>` : ""}
+        <div class="card-alts">
+          <div class="alts"><h4>Indian alternatives</h4>${altsHtml}</div>
+        </div>
+        <div class="card-actions">
+          <a class="action-btn" href="https://world.openfoodfacts.org/product/${escapeHtml(p.code)}" target="_blank" rel="noopener"><span class="action-icon">↗</span> OFF page</a>
+        </div>
       </div>
     `;
     return card;
@@ -901,6 +928,8 @@
   els.grid.addEventListener("click", e => {
     const fav = e.target.closest("[data-fav]");
     if (fav) { const id = fav.dataset.fav; favs.has(id) ? favs.delete(id) : favs.add(id); saveFavs(); applyFilters(); return; }
+    const flag = e.target.closest(".card-flag");
+    if (flag) { openCountry(flag.dataset.country); return; }
     const chip = e.target.closest(".country-chip");
     if (chip) { openCountry(chip.dataset.country); return; }
     const addAlt = e.target.closest("[data-add-alt]");
