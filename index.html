@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -7,7 +7,6 @@
   <link rel="stylesheet" href="assets/styles.css" />
 </head>
 <body>
-  <!-- ===== COMPACT NAVBAR ===== -->
   <nav class="navbar">
     <div class="navbar-inner">
       <a class="navbar-brand" href="#">
@@ -16,46 +15,45 @@
       </a>
       <div class="brand-tools">
         <button id="add-product" class="icon-btn" type="button" title="Add product">＋</button>
-        <button id="export-contribs" class="icon-btn" type="button" title="Export JSON">⇩</button>
-        <button id="import-contribs" class="icon-btn" type="button" title="Import JSON">⇪</button>
+        <button id="export-contribs" class="icon-btn" type="button" title="Export">⇩</button>
+        <button id="import-contribs" class="icon-btn" type="button" title="Import">⇪</button>
         <input id="import-file" class="hidden" type="file" accept="application/json" aria-label="Import contributions JSON" />
-        <button id="submit-contribs" class="icon-btn" type="button" title="Submit to GitHub">⇧</button>
+        <button id="submit-contribs" class="icon-btn" type="button" title="Submit">⇧</button>
         <button id="settings" class="icon-btn" type="button" title="Settings">⚙</button>
         <button id="surprise" class="icon-btn" type="button" title="Surprise me">🎲</button>
-        <button id="theme-toggle" class="icon-btn" type="button" title="Toggle theme">🌓</button>
+        <button id="theme-toggle" class="icon-btn" type="button" title="Theme">🌓</button>
       </div>
     </div>
   </nav>
 
-  <!-- ===== HERO: tagline + search + tabs ===== -->
   <header class="topbar hero">
     <div class="hero-inner">
-      <h1 class="hero-headline">Find Indian alternatives<br><em>to foreign products</em></h1>
-      <p class="hero-sub">Real data from public sources. Contribute your own.</p>
+      <div class="hero-badge">Indian Alternatives Finder</div>
+      <h1 class="hero-headline">Find <span class="glow-text">Swadeshi</span> alternatives to foreign products</h1>
+      <p class="hero-sub">Real data from public sources. Community-driven contributions. Make informed choices.</p>
       <div class="search-wrapper">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
         <input id="search" type="search" placeholder="Search products, brands, categories..." aria-label="Search" />
       </div>
       <div class="stats" id="stats"></div>
     </div>
-    <nav class="tabs" role="tablist">
+    <div class="hero-glow"></div>
+  </header>
+
+  <div class="tabs-bar">
+    <nav class="tabs-inner" role="tablist">
       <button class="tab active" data-tab="catalogue" role="tab" aria-selected="true">Catalogue</button>
       <button class="tab" data-tab="live" role="tab" aria-selected="false">Live Search</button>
     </nav>
-  </header>
+  </div>
 
-  <!-- ===== CATALOGUE TAB ===== -->
   <section id="panel-catalogue">
     <div class="controls">
       <details class="filter-panel" id="filter-panel">
-        <summary>Filters & sort <span class="filter-badge" id="filter-badge" data-count="0">0</span></summary>
+        <summary>Filters & Sort <span class="filter-badge" id="filter-badge" data-count="0">0</span></summary>
         <div class="filter-content">
-          <select id="category" aria-label="Filter by category">
-            <option value="">All categories</option>
-          </select>
-          <select id="country" aria-label="Filter by origin country">
-            <option value="">All origin countries</option>
-          </select>
+          <select id="category" aria-label="Filter by category"><option value="">All categories</option></select>
+          <select id="country" aria-label="Filter by origin country"><option value="">All countries</option></select>
           <select id="recommendation" aria-label="Filter by recommendation">
             <option value="">All recommendations</option>
             <option value="prefer">Prefer</option>
@@ -64,26 +62,17 @@
             <option value="avoid">Avoid</option>
           </select>
           <select id="sort" aria-label="Sort">
-            <option value="default">Sort: default</option>
-            <option value="recommendation">Sort: by recommendation</option>
-            <option value="alpha">Sort: A &rarr; Z</option>
-            <option value="category">Sort: by category</option>
-            <option value="favorites">Sort: favorites first</option>
-            <option value="needs">Sort: needs attention</option>
+            <option value="default">Default</option>
+            <option value="recommendation">By recommendation</option>
+            <option value="alpha">A → Z</option>
+            <option value="category">By category</option>
+            <option value="favorites">Favorites first</option>
+            <option value="needs">Needs attention</option>
           </select>
-          <label class="favs-toggle">
-            <input type="checkbox" id="favs-only" />
-            <span>★ Favorites only</span>
-          </label>
-          <label class="favs-toggle">
-            <input type="checkbox" id="mine-only" />
-            <span>👤 My contributions</span>
-          </label>
-          <label class="favs-toggle">
-            <input type="checkbox" id="needs-only" />
-            <span>Needs alternatives</span>
-          </label>
-          <button id="reset" type="button" class="reset-btn">Reset all</button>
+          <label class="favs-toggle"><input type="checkbox" id="favs-only" /><span>★ Favorites</span></label>
+          <label class="favs-toggle"><input type="checkbox" id="mine-only" /><span>👤 Mine</span></label>
+          <label class="favs-toggle"><input type="checkbox" id="needs-only" /><span>Needs alts</span></label>
+          <button id="reset" type="button" class="reset-btn">Reset</button>
         </div>
       </details>
     </div>
@@ -96,119 +85,95 @@
     </main>
   </section>
 
-  <!-- ===== LIVE SEARCH TAB ===== -->
   <section id="panel-live" class="hidden">
     <div class="controls live-controls">
-      <input id="live-q" type="search" placeholder="Search Open Food Facts (e.g. Nutella, Coca-Cola, Maggi)..." aria-label="Live search" />
-      <button id="live-go" class="reset-btn" type="button">Search</button>
+      <input id="live-q" type="search" placeholder="Search Open Food Facts..." aria-label="Live search" />
+      <button id="live-go" class="magic-btn" type="button">Search</button>
     </div>
     <main>
-      <div id="live-meta" class="results-meta">Type a query and press Enter. Results from <a href="https://world.openfoodfacts.org" target="_blank" rel="noopener">Open Food Facts</a> — community-maintained.</div>
+      <div id="live-meta" class="results-meta">Type a query and press Enter. Results from <a href="https://world.openfoodfacts.org" target="_blank" rel="noopener">Open Food Facts</a>.</div>
       <div id="live-grid" class="grid"></div>
     </main>
   </section>
 
-  <!-- ===== MODALS ===== -->
   <div id="modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="modal-title">
-    <div class="modal-card">
-      <button class="modal-close" data-close-modal aria-label="Close">&times;</button>
-      <div id="modal-body"></div>
-    </div>
+    <div class="modal-card"><button class="modal-close" data-close-modal aria-label="Close">&times;</button><div id="modal-body"></div></div>
   </div>
-
   <div id="add-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="add-title">
     <div class="modal-card">
       <button class="modal-close" data-close-modal aria-label="Close">&times;</button>
       <h2 id="add-title">Add a product</h2>
-      <p class="modal-sub">Saved on this device. Click <strong>Submit</strong> later to send to maintainers.</p>
+      <p class="modal-sub">Saved locally. Submit later to share with maintainers.</p>
       <form id="add-form" class="form">
-        <div class="form-step-label">Foreign product details</div>
-        <label>Foreign product name<input name="fName" required placeholder="e.g. Pampers diapers"/></label>
-        <label>Foreign brand<input name="fBrand" required placeholder="e.g. Procter & Gamble"/></label>
-        <label>Origin country
-          <select name="fCountry" id="add-country" required></select>
-        </label>
+        <div class="form-step-label">Foreign product</div>
+        <label>Product name<input name="fName" required placeholder="e.g. Pampers diapers"/></label>
+        <label>Brand<input name="fBrand" required placeholder="e.g. Procter & Gamble"/></label>
+        <label>Origin country<select name="fCountry" id="add-country" required></select></label>
         <label>Category<input name="category" required placeholder="e.g. Baby care"/></label>
-        <label>Foreign price (₹, optional)<input name="fPrice" placeholder="e.g. ₹500 / pack"/></label>
+        <label>Price ₹ (optional)<input name="fPrice" placeholder="e.g. ₹500 / pack"/></label>
         <div class="form-step-label">Indian alternative</div>
-        <fieldset>
-          <legend>Indian alternative</legend>
+        <fieldset><legend>Alternative details</legend>
           <label>Name<input name="iName" required placeholder="e.g. MamyPoko Pants"/></label>
           <label>Brand<input name="iBrand" required placeholder="e.g. Unicharm India"/></label>
-          <label>Price (₹, optional)<input name="iPrice" placeholder="e.g. ₹400 / pack"/></label>
+          <label>Price ₹ (optional)<input name="iPrice" placeholder="e.g. ₹400 / pack"/></label>
           <label>Made in (optional)<input name="iMadeIn" placeholder="e.g. India (Sri City)"/></label>
         </fieldset>
         <label>Notes (optional)<textarea name="notes" rows="2" placeholder="Why is this a good alternative?"></textarea></label>
-        <div class="form-actions">
-          <button type="button" data-close-modal class="reset-btn">Cancel</button>
-          <button type="submit" class="primary-btn">Add product</button>
-        </div>
+        <div class="form-actions"><button type="button" data-close-modal class="reset-btn">Cancel</button><button type="submit" class="magic-btn">Add product</button></div>
       </form>
     </div>
   </div>
-
   <div id="alt-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="alt-title">
     <div class="modal-card">
       <button class="modal-close" data-close-modal aria-label="Close">&times;</button>
-      <h2 id="alt-title">Suggest an Indian alternative</h2>
+      <h2 id="alt-title">Suggest an alternative</h2>
       <p class="modal-sub" id="alt-context"></p>
       <form id="alt-form" class="form">
         <input type="hidden" name="targetId" />
-        <label>Alternative name<input name="iName" required/></label>
+        <label>Name<input name="iName" required/></label>
         <label>Brand<input name="iBrand" required/></label>
-        <label>Price (₹, optional)<input name="iPrice"/></label>
+        <label>Price ₹ (optional)<input name="iPrice"/></label>
         <label>Made in (optional)<input name="iMadeIn"/></label>
-        <div class="form-actions">
-          <button type="button" data-close-modal class="reset-btn">Cancel</button>
-          <button type="submit" class="primary-btn">Add alternative</button>
-        </div>
+        <div class="form-actions"><button type="button" data-close-modal class="reset-btn">Cancel</button><button type="submit" class="magic-btn">Add alternative</button></div>
       </form>
     </div>
   </div>
-
   <div id="note-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="note-title">
     <div class="modal-card">
       <button class="modal-close" data-close-modal aria-label="Close">&times;</button>
-      <h2 id="note-title">Your experience note</h2>
+      <h2 id="note-title">Your experience</h2>
       <p class="modal-sub" id="note-context"></p>
       <form id="note-form" class="form">
         <input type="hidden" name="targetId" />
-        <label>Your note<textarea name="note" rows="4" placeholder="Your experience — facts only, no fabricated reviews."></textarea></label>
+        <label>Note<textarea name="note" rows="4" placeholder="Facts only, no fabricated reviews."></textarea></label>
+        <div class="form-actions"><button type="button" data-close-modal class="reset-btn">Cancel</button><button type="submit" class="magic-btn">Save note</button></div>
+      </form>
+    </div>
+  </div>
+  <div id="settings-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="settings-title">
+    <div class="modal-card">
+      <button class="modal-close" data-close-modal aria-label="Close">&times;</button>
+      <h2 id="settings-title">Backend settings</h2>
+      <p class="modal-sub">Connect to a Swadeshi Swap API server for shared contributions.</p>
+      <form id="settings-form" class="form">
+        <label>API base URL<input name="apiBase" id="settings-api-base" placeholder="https://your-service.up.railway.app" autocomplete="off"/></label>
+        <div id="settings-status" class="meta"></div>
         <div class="form-actions">
+          <button type="button" id="settings-test" class="reset-btn">Test</button>
+          <button type="button" id="settings-sync" class="reset-btn">Sync</button>
           <button type="button" data-close-modal class="reset-btn">Cancel</button>
-          <button type="submit" class="primary-btn">Save note</button>
+          <button type="submit" class="magic-btn">Save</button>
         </div>
       </form>
     </div>
   </div>
 
   <footer class="footer">
-    <p>
-      Curated data is editorial — verify at point of sale.
-      Live search via <a href="https://world.openfoodfacts.org" target="_blank" rel="noopener">Open Food Facts</a> (ODbL).
-      Sources: MEA, MoCI, World Bank, company filings.
-    </p>
-  </footer>
-
-  <div id="settings-modal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="settings-title">
-    <div class="modal-card">
-      <button class="modal-close" data-close-modal aria-label="Close">&times;</button>
-      <h2 id="settings-title">Backend settings</h2>
-      <p class="modal-sub">Connect to a Swadeshi Swap API server. Once connected, contributions sync to the shared database.</p>
-      <form id="settings-form" class="form">
-        <label>API base URL
-          <input name="apiBase" id="settings-api-base" placeholder="https://your-service.up.railway.app" autocomplete="off"/>
-        </label>
-        <div id="settings-status" class="meta"></div>
-        <div class="form-actions">
-          <button type="button" id="settings-test" class="reset-btn">Test</button>
-          <button type="button" id="settings-sync" class="reset-btn" title="Push local contributions to backend">Sync</button>
-          <button type="button" data-close-modal class="reset-btn">Cancel</button>
-          <button type="submit" class="primary-btn">Save</button>
-        </div>
-      </form>
+    <div class="footer-inner">
+      <span class="footer-brand">🇮🇳 Swadeshi Swap</span>
+      <p>Curated data is editorial — verify at point of sale. Live search via <a href="https://world.openfoodfacts.org" target="_blank" rel="noopener">Open Food Facts</a>. Sources: MEA, MoCI, World Bank.</p>
     </div>
-  </div>
+  </footer>
 
   <script src="assets/config.js"></script>
   <script src="data/countries.js"></script>
