@@ -54,10 +54,12 @@
     }
   }
 
-  // -------- Theme --------
+  // -------- Theme (light default) --------
   const savedTheme = localStorage.getItem(THEME_KEY);
-  if (savedTheme === "dark" || (!savedTheme && matchMedia("(prefers-color-scheme: dark)").matches)) {
+  if (savedTheme === "dark") {
     document.documentElement.setAttribute("data-theme", "dark");
+  } else {
+    document.documentElement.removeAttribute("data-theme");
   }
 
   // -------- Element refs --------
