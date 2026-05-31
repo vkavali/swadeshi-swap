@@ -192,13 +192,13 @@
     const preferShare = products.filter(p => (COUNTRIES[p.foreign.country] || {}).recommendation === "prefer").length;
     els.stats.innerHTML = `
       <span class="stat-chip"><strong>${products.length}</strong> products</span>
-      <span class="stat-chip"><strong>${totalAlts}</strong> alternatives</span>
+      <span class="stat-chip"><strong>${totalAlts}</strong> alt</span>
       <span class="stat-chip"><strong>${distinctCountries}</strong> countries</span>
-      <span class="stat-chip"><strong>${cats.size}</strong> categories</span>
-      <span class="stat-chip">★ <strong>${favs.size}</strong> favorites</span>
-      <span class="stat-chip">👤 <strong>${contribs.products.length}</strong> your products</span>
-      <span class="stat-chip" style="color:var(--avoid)">⚠ <strong>${avoidShare}</strong> avoid</span>
-      <span class="stat-chip" style="color:var(--prefer)">✓ <strong>${preferShare}</strong> prefer</span>
+      <span class="stat-chip"><strong>${cats.size}</strong> cat</span>
+      <span class="stat-chip"><strong>${favs.size}</strong> fav</span>
+      <span class="stat-chip"><strong>${contribs.products.length}</strong> yours</span>
+      <span class="stat-chip" style="color:var(--avoid)"><strong>${avoidShare}</strong> avoid</span>
+      <span class="stat-chip" style="color:var(--prefer)"><strong>${preferShare}</strong> prefer</span>
     `;
   }
 
@@ -220,27 +220,27 @@
     els.insights.innerHTML = `
       <div class="insight">
         <strong data-count="${filtered.length}">${filtered.length}</strong>
-        <span>Visible of ${total}</span>
+        <span>§ Visible · ${total}</span>
       </div>
       <div class="insight ${watch ? "warning" : ""}">
         <strong data-count="${watch}">${watch}</strong>
-        <span>Avoid / Caution</span>
+        <span>§ Watch list</span>
       </div>
       <div class="insight ${needs ? "warning" : ""}">
         <strong data-count="${needs}">${needs}</strong>
-        <span>Need alternatives</span>
+        <span>§ Needs alt</span>
       </div>
       <div class="insight">
         <strong data-count="${visibleAlts}">${visibleAlts}</strong>
-        <span>Alternatives</span>
+        <span>§ Alternatives</span>
       </div>
       <div class="insight">
         <strong data-count="${categories}">${categories}</strong>
-        <span>${topCategory ? escapeHtml(topCategory[0]) : "Categories"}</span>
+        <span>§ ${topCategory ? escapeHtml(topCategory[0]) : "Categories"}</span>
       </div>
       <div class="insight">
         <strong data-count="${userVisible}">${userVisible}</strong>
-        <span>Community</span>
+        <span>§ Community</span>
       </div>
     `;
     animateCounters();
@@ -414,7 +414,7 @@
     els.grid.style.opacity = "1";
 
     els.empty.classList.toggle("hidden", filtered.length > 0);
-    els.meta.textContent = `${filtered.length} of ${allProducts().length} products`;
+    els.meta.textContent = `${filtered.length} of ${allProducts().length} products`; // styled by CSS .results-meta
     renderInsights(filtered);
     renderStats();
 
@@ -459,7 +459,7 @@
     const meaSlug = encodeURIComponent(c.name);
     els.modalBody.innerHTML = `
       <h2 id="modal-title">${c.flag} ${escapeHtml(c.name)}</h2>
-      <div class="country-line">Country profile vs. India</div>
+      <div class="country-line">§ Country profile vs. India</div>
 
       <div class="stat-row"><div class="label">Diplomatic relationship</div><div class="value">${escapeHtml(c.relationship || "—")}</div></div>
       <div class="stat-row"><div class="label">Treatment of Indians</div><div class="value">${escapeHtml(c.treatmentOfIndians || "—")}</div></div>
@@ -512,7 +512,7 @@
   }
 
   // -------- Eco-score / Nutri-score helpers --------
-  const SCORE_COLORS = { a: "#1e8f4e", b: "#60ac0e", c: "#eeae0e", d: "#ff6f1e", e: "#e63e11" };
+  const SCORE_COLORS = { a: "#4A7355", b: "#5A8A66", c: "#C69A2C", d: "#FF5722", e: "#BF3B2C" };
   function scoreHTML(grade, label) {
     if (!grade || grade === "unknown" || grade === "not-applicable") return "";
     const g = grade.toLowerCase();
